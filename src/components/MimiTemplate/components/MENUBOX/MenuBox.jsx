@@ -114,7 +114,7 @@ const developerItems = [
 
         </NavLink>
 
-        <Dropdown menu={{items: developerItems}}>
+        {/* <Dropdown menu={{items: developerItems}}>
           <Button type="text" size={buttSize}
             icon={<AndroidOutlined />}
           >
@@ -139,7 +139,7 @@ const developerItems = [
           >
             Дерево
           </Button>
-        </NavLink>
+        </NavLink> */}
 
         {/* <NavLink to={'/executor'} 
         className={({ isActive }) => isActive ? 'mi-active' : ''}

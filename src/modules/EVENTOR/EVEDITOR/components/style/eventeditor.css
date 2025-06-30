@@ -1,0 +1,14 @@
+.ev-editor-modal-head {
+    display: grid;
+    grid-template-columns: auto 100px 50px 40px;
+    grid-gap: 12px;
+}
+
+.ev-editor-modal-content-wrapper{
+    min-height: 500px;
+}
+
+.evt-modal-type-trigger {
+    font-size: x-large;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}

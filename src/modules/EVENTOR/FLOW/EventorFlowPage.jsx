@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import DevSideNavMt from '../../../components/MimiTemplate/components/DEVSIDENAV/DevSidenavMt';
-import { Button, DatePicker, Switch } from 'antd';
+import { Button, DatePicker, Input, Modal, Switch } from 'antd';
 import { DoubleLeftOutlined, DoubleRightOutlined, LeftOutlined, LoadingOutlined, RightOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import FlowDateRow from './components/FlowDateRow';
 import FlowDayHeadRow from './components/FlowDayHeadRow';
+import EventEditorCom from '../EVEDITOR/EventEditorCom';
 
 
 const EventorFlowPage = ({user_data, user_state}) => {
     const [startMonth, setstartMonth] = useState(dayjs().startOf('month'));
     const [endMonth, setEndMonth] = useState(dayjs().endOf('month'));
+
+    const [openModalEditor, setOpenModalEditor] = useState(false);
+    const [openModalView, setOpenModalView] = useState(false);
+    // const [openModalEditor, setOpenModalEditor] = useState(false);
 
 
     const [dateArray, setDateArray] = useState([]);
@@ -109,6 +114,19 @@ const EventorFlowPage = ({user_data, user_state}) => {
 
     }, [startMonth, endMonth, calendarDirection]);
 
+    const handleOpenView = (date, id) => {
+        
+    }
+
+    const handleOpenEditor = (date, id) => {
+        setOpenModalEditor(true);
+    }
+
+    const handleCloseEditor = (date, id) => {
+
+    }
+
+
   return (
      <div className={`mi-page-layout ${user_state?.role == 'developer' ? 'mi-layout-dev' : 'mi-layout-client'}`}
         
@@ -167,6 +185,11 @@ const EventorFlowPage = ({user_data, user_state}) => {
                                     {dateg.type === 'day' && (
                                         <FlowDateRow date={dateg.date} 
                                             key={`dayrow_${dateg.date.format('YYYY-MM-DD')}`}
+                                            open_editor={openModalEditor}
+                                            open_view={openModalView}
+                                            on_open_editor={handleOpenEditor}
+                                            on_close_editor={handleCloseEditor}
+                                            on_open_view={handleOpenView}
                                         />
                                     )}
                                     {dateg.type === 'dayheader' && (
@@ -229,6 +252,20 @@ const EventorFlowPage = ({user_data, user_state}) => {
                 </div>
             </div>
         </div>
+
+
+
+      <br />
+      <br />
+
+ 
+        <EventEditorCom
+            open={openModalEditor}
+            onOk={() => setOpenModalEditor(false)}
+            onCancel={() => setOpenModalEditor(false)}
+        />
+
+
     </div>
   );
 };

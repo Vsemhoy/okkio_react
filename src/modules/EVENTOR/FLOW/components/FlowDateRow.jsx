@@ -29,8 +29,11 @@ const FlowDateRow = (props) => {
 
     const handleDblClick = (ev) => {
         if (!ev.target.closest('.eventor-flow-daycard')) {
-            let newobj = { date: date };
-            setEventStack([newobj, ...eventStack]);
+            // let newobj = { date: date };
+            // setEventStack([newobj, ...eventStack]);
+            if (props.on_open_editor){
+                props.on_open_editor(date, null);
+            }
         }
     }
 
