@@ -1,0 +1,34 @@
+.flow-date-row-wrapper {
+    margin-bottom: 2px;
+    transition: all 0.7s;
+}
+
+.flow-date-row {
+    display: grid;
+    grid-template-columns: 150px auto;
+    background-color: rgba(255, 255, 255, 0.403);
+    backdrop-filter: blur(32px);
+    transition: all 0.3s;
+    min-height: 44px;
+    /* border-bottom: 1px solid #ffffff85; */
+}
+
+.flow-date-row > div {
+    padding: 12px;
+}
+
+.flow-date-row-wrapper:hover > div {
+    background-color: rgba(255, 255, 255, 0.556);
+}
+
+.ev-flow-row-event-stack {
+        display: grid;
+    grid-template-columns: auto auto auto;
+}
+.affix-date {
+    background-color: burlywood;
+}
+
+.flow-date-row.today {
+        border-left: 6px solid #0092ff;
+}

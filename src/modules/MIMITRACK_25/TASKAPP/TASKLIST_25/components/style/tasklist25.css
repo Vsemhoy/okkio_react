@@ -1,0 +1,111 @@
+.mi-1col-3col {
+    display: grid;
+    grid-template-columns: 300px auto;
+    grid-gap: 0.5rem;
+    padding: 0.5rem;
+}
+.mi-flat-task {
+    display: grid;
+    grid-template-columns: 40px auto;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.164);
+    border-left: 0.5px solid rgb(0 0 0 / 20%);
+}
+.mi-flat-task-body {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.95rem;
+}
+
+
+
+.mi-tree-header-name {
+    margin-bottom: 12px;
+    font-size: smaller;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 3px;
+    border-radius: 6px;
+}
+.mi-tree-header-name:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+.mi-window-topbar-tab {
+    background-color: rgba(255, 255, 255, 0.414);
+    color: black;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 8px;
+    cursor: pointer;
+}
+.mi-window-topbar-tab:hover {
+    background-color: rgba(255, 255, 255, 0.648);
+}
+
+.mi-window-topbar-tab.active {
+    background-color: rgb(255, 255, 255);
+    color: rgb(53, 53, 53);
+}
+
+.mi-wintab-closer {
+    margin-left: 8px;
+    width: auto;
+    opacity: 0;
+    transition: 0.5s;
+    text-align: right;
+    padding: 2px;
+    border-radius: 4px;
+    font-size: smaller;
+}
+.mi-window-topbar-tab:hover .mi-wintab-closer, .ant-dropdown-menu-item:hover .mi-wintab-closer {
+    opacity: 1;
+}
+.mi-wintab-closer:hover {
+    background-color: rgba(195, 195, 195, 0.359);
+}
+.mi-wintab-closer:active {
+    background-color: rgba(130, 130, 130, 0.359);
+}
+
+.mi-level-0, .mi-level-1, .mi-level-2, .mi-level-3, .mi-level-4, .mi-level-5, .mi-level-6, .mi-level-7 {
+    padding-left: 12px;
+}
+.mi-flat-task-wrapper {
+    /* background-color: rgba(0, 0, 0, 0.042); */
+    padding-top: 6px;
+    border-left: 2px solid rgba(250, 128, 114, 0);
+    transition: all 0.3s;
+    /* padding-left: 6px; */
+}
+.mi-flat-task-wrapper:last-child {
+    
+    border-bottom-left-radius: 9px;
+}
+.mi-flat-task-wrapper:hover > .mi-flat-task-childrens > .mi-flat-task-wrapper {
+    /* background-color: rgba(0, 0, 0, 0.042); */
+    border-left: 2px solid rgba(0, 110, 255, 0.258);
+}
+.mi-flat-task-wrapper:not(:last-child){
+    padding-bottom: 1px;
+}
+.mi-flat-task {
+    background-color: white;
+    transition: all 0.3s;
+    border-radius: 6px;
+    min-height: 44px;
+}
+.mi-flat-task:hover {
+    background-color: #e6f4ff;
+}
+.mi-flat-task-stack-combo {
+    background-color: gainsboro;
+    padding: 6px;
+    padding-bottom: 40vh;
+}
+.mi-flat-task-stack-combo > div:last-child {
+}
+
+.mi-ft-section-item {
+    background-color: #fdfde6;
+}

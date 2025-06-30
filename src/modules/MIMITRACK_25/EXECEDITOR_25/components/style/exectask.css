@@ -1,0 +1,45 @@
+.mi-exectask {
+    /* overflow: hidden; */
+}
+.mi-exectask-footer {
+    background-color: rgb(97, 97, 97);
+    padding: 12px;
+}
+.mi-exectask-head, .mi-exectask-content {
+    padding: 12px;
+}
+.mi-exectask-span-trigger {
+    display: none;
+}
+
+.mi-col-waiting .mi-exectask:hover .mi-exectask-span-trigger {
+    display: block;
+    position: absolute;
+}
+.mi-col-in_progress .mi-exectask:hover .mi-exectask-span-trigger {
+    display: block;
+    position: absolute;
+}
+.mi-col-testing .mi-exectask:hover .mi-exectask-span-trigger {
+    display: block;
+    position: absolute;
+}
+
+.mi-exectask-span-trigger {
+    
+    height: 46px;
+    width: 46px;
+    backdrop-filter: blur(12px);
+    font-size: xx-large;
+    color: white;
+    border-radius: 6px;
+    text-align: center;
+    margin-top: -19px;
+    cursor: pointer;
+}
+.mi-exectask-span-trigger.runner {
+background-color: rgba(43, 255, 0, 0.171);
+} 
+.mi-exectask-span-trigger.stopper {
+background-color: rgba(255, 0, 0, 0.171);
+} 

@@ -1,0 +1,7 @@
+.project-card-box:nth-child(odd){
+    background-color: #0d1117;
+}
+.project-card-box.active {
+    outline: 3px solid rgb(0, 84, 181);
+    box-shadow: inset 0px 0px 9px rgb(0, 84, 181);
+}

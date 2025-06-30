@@ -1,0 +1,38 @@
+.mi-task-stack {
+    display: grid;
+    grid-template-columns: 50px auto;
+    margin-top: 6px;
+}
+.mi-task-stack-in {
+    display: grid;
+    grid-template-columns: 60px auto;
+
+}
+
+.mi-task-stack-collection {
+    display: flex;
+    grid-gap: 9px;
+    flex-direction: column;
+    
+    
+}
+
+.mi-stack-task {
+    background-color: rgb(240, 240, 240);
+    display: grid;
+    grid-template-columns: 48px auto;
+    margin-top: 6px;
+}
+.mi-stack-task-meta {
+    color: var(--third-text-color);
+    padding-top: 4px;
+    padding-left: 4px;
+}
+.stack-task-text {
+    padding: 4px;
+}
+
+.mi-task-body {
+    margin-top: 6px;
+    /* background-color: var(--row-selected-color); */
+}

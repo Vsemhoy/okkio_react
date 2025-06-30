@@ -1,0 +1,9 @@
+.mi-state-bar {
+    display: block;
+    position: fixed;
+    bottom: 0px;
+    height: 33px;
+    width: 100vw;
+    background-color: #00ffff63;
+    backdrop-filter: blur(12px);
+}

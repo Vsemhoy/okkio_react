@@ -1,0 +1,82 @@
+.mi-devsidebar {
+    min-height: calc(100vh - 44px);
+    width: 44px;
+    background-color: rgba(255, 255, 255, 0.212);
+}
+
+.mi-devside-menu {
+    background-color: rgba(0, 0, 0, 0.547);
+    min-height: calc(100vh - 40px);
+    position: absolute;
+    transition: all 0.2s;
+    backdrop-filter: blur(22px);
+    overflow: hidden;
+    z-index: 999;
+}
+.mi-devside-menu-narrow {
+    width: 44px;
+}
+
+.mi-devside-menu-wide {
+    width: 320px;
+}
+
+.mi-devmenu-columns {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    height: 100%;
+    min-height: calc(100vh - 44px);
+}
+.mi-devmenu-columns > div:first-child {
+    border-right: 1px solid gray;
+    height: 100%;
+}
+
+.mi-ds-menu-item {
+    min-height: 66px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.253);
+    font-size: xx-large;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    color: white;
+}
+.mi-ds-menu-item:hover {
+    background-color: rgba(255, 255, 255, 0.158);
+}
+.mi-ds-menu-block{
+    min-height: calc(100vh - 44px);
+    color: white;
+}
+.mi-ds-menu-block > div:first-child {
+    font-size: large;
+    background-color: rgba(255, 255, 255, 0.158);
+}
+.mi-ds-menu-proj-stack {
+    width: 100%;
+}
+
+.mi-ds-menu-proj-stack-item {
+    padding: 9px;
+    cursor: pointer;
+}
+
+.mi-tree-header-name.active {
+color: rgba(0, 0, 0, 0.88);
+    background-color: #e6f4ff;
+}
+
+.mi-ds-menu-proj-card-item {
+    border-bottom: 1px solid gray;
+    padding: 12px;
+    transition: all 0.3s;
+}
+.mi-ds-menu-proj-card-item-name {
+    font-size: larger;
+}
+.mi-ds-menu-proj-card-item.active {
+    background: #0d111744;
+}
+.mi-ds-menu-proj-card-item:hover {
+    background: #0d11172d;
+}

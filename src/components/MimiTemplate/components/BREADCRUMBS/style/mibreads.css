@@ -1,0 +1,19 @@
+.mi-bread-crumbs {
+    display: flex;
+    grid-gap: 12px;
+}
+.mi-bread-crumbs a {
+    color: var(--link-color-faded);
+    text-decoration: none;
+    padding-left: 16px;
+}
+
+.mi-bread-crumbs > div::before {
+    display: block;
+    content: "/";
+    height: 22px;
+    width: 22px;
+    /* margin- */
+    /* top: 0px; */
+    position: absolute;
+}

@@ -1,0 +1,49 @@
+.mi-comment-stack {
+    display: grid;
+    grid-template-columns: 200px auto;
+    margin-top: 6px;
+    padding-right: 6px;
+    padding-bottom: 6px;
+}
+.mi-comment-stack-in {
+    display: grid;
+    grid-template-columns: 60px auto;
+
+}
+
+.mi-comment-stack-collection {
+    display: flex;
+    grid-gap: 9px;
+    flex-direction: column;
+    
+    
+}
+
+
+
+.mi-stack-comment {
+    background-color: #f3f3f3;
+    display: grid;
+    grid-template-columns: 48px auto;
+    margin-top: 6px;
+    border-radius: 5px;
+}
+.mi-uncooxed .mi-stack-comment {
+    /* background-color: #ffffff; */
+    border: 1px solid #0000001c;
+}
+
+.mi-stack-comment-meta {
+    color: var(--third-text-color);
+    padding-top: 4px;
+    padding-left: 4px;
+}
+.stack-comment-text {
+    padding: 4px;
+}
+
+.mi-comment-body {
+    margin-top: 6px;
+    /* background-color: var(--row-selected-color); */
+}
+

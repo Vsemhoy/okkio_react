@@ -1,0 +1,59 @@
+.mi-so-container {
+    display: grid;
+    grid-template-columns: repeat(6, auto);
+}
+.mi-sortable-column-wrapper {
+    border-radius: 6px;
+    border: 2px solid white;
+    
+}
+.mi-sortable-column {
+    min-width: 220px;
+    padding: 6px;
+    height: 100%;
+}
+
+.sort-item {
+    
+    transition: all 0.2s;
+    border: 1px solid rgb(212, 212, 212);
+    cursor: grab;
+    user-select: none;
+    border-radius: 6px;
+    margin-bottom: 6px;
+    background-color: white;
+}
+.sort-item:hover {
+    /* background: rgb(234, 255, 251); */
+    box-shadow: 1px 5px 9px rgba(0, 0, 0, 0.271);
+}
+.sort-head {
+    
+    /* user-select: none; */
+    display: grid;
+    grid-template-columns: auto 30px;
+    
+    font-size: larger;
+}
+.mi-sort-head-trig {
+    cursor: pointer;
+    padding: 3px 6px;
+}
+.mi-sort-head-trig:hover {
+    cursor: pointer;
+    background-color: white;
+}
+.sort-handle:hover {
+    cursor:grab;
+    background-color: brown;
+}
+
+.sort-item.dragged {
+    background: rgb(209, 209, 209);
+    cursor: grabbing;
+}
+
+.drag-starter {
+    border: 2px solid green;
+    opacity: 0.5;
+}

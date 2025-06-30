@@ -1,0 +1,13 @@
+.mi-statusbar-root {
+    --height-core:  54px;
+
+    background-color: #80808059;
+    backdrop-filter: blur(9px);
+    position: fixed;
+    width: 100vw;
+    height: var(--height-core);
+    overflow: hidden;
+    color: white;
+    bottom: calc(0px);
+    z-index: 9999;
+}

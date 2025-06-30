@@ -1,0 +1,74 @@
+.ut-table-list-card {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.233);
+    font-size: larger;
+    display: grid;
+    grid-template-columns: 40px 280px auto 50px 50px 50px 50px 50px 50px 44px;
+    background-color: rgba(27, 27, 27, 0.786);
+    transition: all 0.3s;
+}
+.ut-table-list-stack {
+    padding-bottom: 40vh;
+}
+.ut-table-list-card:hover {
+    background-color: rgba(2, 68, 111, 0.786);
+    color: white;
+}
+
+.ut-table-list-card > div {
+    border-right: 1px #8080804f dotted;
+}
+.ut-table-list-card > div > div {
+    padding: 6px;
+}
+
+.ut-table-list-card-schema {
+    overflow: auto;
+    background-color: #0d0d0d;
+}
+.ut-table-list-card-schema > div {
+    width: max-content;
+}
+
+.ut-tlc-row {
+    display: flex;
+}
+.ut-tlc-row:hover > div > div {
+    background-color: #ed143d2e
+}
+
+
+.ut-tlc-cell {
+    border-right: 1px solid #6c6c6c91;
+    height: 100%;
+}
+
+.ut-tlc-cell > div {
+    height: 100%;
+    padding: 6px;
+    max-width: 140px;
+    word-break: break-word;
+}
+.ut-tlc-cell-head {
+    background-color: #404040b0;
+}
+
+.ut-table-list-toggler {
+    cursor: pointer;
+    opacity: 0.9;
+    transition: all 0.3s;
+    font-size: large;
+}
+.ut-table-list-toggler:hover {
+    color: red;
+    opacity: 1;
+}
+.ut-table-list-toggler-off {
+    opacity: 0.2;
+}
+.ut-table-list-table-name {
+    font-size: larger;
+}
+.ut-table-list-table-descr {
+    font-size: smaller;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}

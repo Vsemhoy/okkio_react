@@ -1,0 +1,21 @@
+.mi-task-card {
+    border-radius: 3px;
+    /* border: 1px solid var(--column-divider-color); */
+    display: grid;
+    grid-template-columns: 48px auto;
+    
+}
+.mi-task-card-wrapper {
+    border: 1px solid #ff6a00b1;
+    margin-bottom: 12px;
+    padding-right: 4px;
+    border-radius: 5px;
+    /* background: #ff690021; */
+}
+.mi-task-stack-collection {
+
+}
+.mi-task-card-wrapper.mi-uncooxed {
+    box-shadow: -3px 0px 0px 0px #ff8f1e;
+    /* background: #b6cfd84f; */
+}
