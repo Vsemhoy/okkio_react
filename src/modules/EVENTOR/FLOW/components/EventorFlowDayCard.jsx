@@ -2,34 +2,134 @@ import React, { useEffect, useState } from 'react';
 import { EditOutlined, EllipsisOutlined, LockTwoTone, SettingOutlined } from '@ant-design/icons';
 import { Avatar, Card } from 'antd';
 import './style/eventorflowdaycard.css';
+import dayjs from 'dayjs';
+import { MDXEditor } from '@mdxeditor/editor';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+
+import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { LANGUAGE_MAP } from '../../../../components/Definitions/Global/Lists/ProgLangs';
+
 const { Meta } = Card;
 
 const EventorFlowDayCard = (props) => {
+
+      const [itemId, setItemId] = useState(null);
+      const [blockAction, setBlockAction] = useState(false);
+  
+      const [content, setContent] = useState('');
+      const [name, setName] = useState('');
+      const [setdate, setSetdate] = useState(dayjs());
+
+
+
+    useEffect(() => {
+        setItemId(props.data.id);
+        setContent(props.data.content);
+        setName(props.data.name);
+        setSetdate(props.data.setdate);
+    }, [props.data]);
+
+
+    const handleTriggerChange = () => {
+      if (props.on_change_trigger){
+        props.on_change_trigger(itemId);
+      }
+    }
+
+
+ const handleCopyCode = async (code) => {
+    try {
+      await navigator.clipboard.writeText(code);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+      alert('Не удалось скопировать (разрешите доступ к буферу обмена)');
+    }
+  };
+
+  const CodeBadge = ({code, lang}) => {
+    const [copied, setCopied] = useState(false);
+    let langLabel = LANGUAGE_MAP[lang] ? LANGUAGE_MAP[lang] : "code"; 
+
+    let handleCopy = () => {
+      setCopied(true);
+      handleCopyCode(code);
+      setTimeout(() => {
+          setCopied(false);
+      }, 3200);
+    }
+
+    return <div
+      onClick={handleCopy}
+     className={`code-badge ${copied ? "copied" : ""}`}>{langLabel}</div>
+  }
+
 
   return (
     <div className={'eventor-flow-daycard'}>
     <Card
 
-      cover={
-        <img
-          alt="example"
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREE0yciVk88jOW7mkQjULzH2jCE6Jkc_SpPoF-Oih4LL2YIB3mqSCZKpaksGGFJIMU5dg&usqp=CAU"
-        />
-      }
+      // cover={
+      //   <img
+      //     alt="example"
+      //     src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREE0yciVk88jOW7mkQjULzH2jCE6Jkc_SpPoF-Oih4LL2YIB3mqSCZKpaksGGFJIMU5dg&usqp=CAU"
+      //   />
+      // }
       actions={[
         <SettingOutlined key="setting" />,
-        <EditOutlined key="edit" />,
+        <EditOutlined key="edit" onClick={handleTriggerChange} />,
         <EllipsisOutlined key="ellipsis" />,
       ]}
     >
       <Meta
         avatar={<LockTwoTone />}
-        title="Where does it come from?"
+        title={name}
 
       />
       <br/>
-      <div>
-        {`Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.`}
+      <div className={'remarkrenderer'}>
+
+        {/* <ReactMarkdown 
+           remarkPlugins={[remarkGfm]}
+        >
+          {content}
+        </ReactMarkdown> */}
+          <ReactMarkdown 
+            remarkPlugins={[remarkGfm]}
+            components={{
+              code({ node, inline, className, children, ...props }) {
+                const match = /language-(\w+)/.exec(className || '');
+                const lang = match?.[1] || 'text';
+
+                return !inline && match ? (
+                  <div>
+                    <CodeBadge code={String(children).replace(/\n$/, '')} lang={lang} />
+                    <SyntaxHighlighter
+                      style={tomorrow}
+                      language={lang}
+                      PreTag="div"
+                      {...props}
+                      showLineNumbers // 🔥 включаем номера
+                      wrapLines       // опционально: если строки длинные
+                      lineProps={{ style: { wordBreak: 'break-all', whiteSpace: 'pre-wrap' } }}
+                    >
+                      {String(children).replace(/\n$/, '')}
+                    </SyntaxHighlighter>
+
+                  </div>
+                ) : (
+                  <code className={className} {...props}>
+                    {children}
+                  </code>
+                );
+              }
+            }}
+          >
+            {content}
+          </ReactMarkdown>
+
+
       </div>
     </Card>
     </div>

@@ -6,39 +6,53 @@ import { Affix, Button, Dropdown } from 'antd';
 import { AndroidOutlined, AuditOutlined, BarsOutlined, CloseOutlined, DropboxOutlined, FundProjectionScreenOutlined, HomeOutlined, Html5Outlined, LinuxOutlined, PaperClipOutlined, PartitionOutlined, ProjectOutlined, QuestionOutlined, RocketOutlined, UserOutlined, WechatWorkOutlined, YahooOutlined } from '@ant-design/icons';
 import { Link, NavLink } from 'react-router-dom';
 import { USER_STATE } from '../../../../config/config';
+import AuthModal from '../../../Auth/AuthModal';
+import { logout, useAuth } from '../../../../Hooks/UseAuth';
+
+
+
+
+
+
+
+
 
 const MenuBox = (props) => {
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const buttSize = 'large';
+  const [userData, setUserData] = useState(null);
 
+  // Проверяем авторизацию при загрузке
+  React.useEffect(() => {
+    const token = localStorage.getItem('jwt');
+    if (token) console.log('Пользователь уже авторизован');
+  }, []);
+
+
+  const authCallBack = (token, user) => {
+    if (props.on_auth){
+      props.on_auth(token, user);
+    }
+  }
+
+  useEffect(() => {
+    setUserData(props.user_data);
+  }, [props.user_data]);
+
+  const handleLogout = () => {
+    let result = logout();
+    if (result){
+      props.on_auth(null, null);
+    }
+  }
 
 const clientItems = [
   {
-    label: <NavLink to={'/claims'}
-        className={({ isActive }) => isActive ? 'mi-active' : ''}
-        >
-            Заявки
-        </NavLink>,
-    key: '1',
+    label: <div
+      onClick={handleLogout}
+    >Logout</div>,
+    key: '1535',
     icon: <WechatWorkOutlined />,
-  },
-  {
-    label: <NavLink to={'/questions'}
-        className={({ isActive }) => isActive ? 'mi-active' : ''}
-        >
-            Вопросы
-        </NavLink>,
-    key: '2',
-    icon: <QuestionOutlined />,
-  },
-  {
-    label: <NavLink to={'/releases'}
-        className={({ isActive }) => isActive ? 'mi-active' : ''}
-        >
-            Релизы
-        </NavLink>,
-    key: '3',
-    icon: <RocketOutlined />,
   },
 ];
 
@@ -164,7 +178,40 @@ const developerItems = [
             Настройки
           </Button>
         </NavLink>
+
+          {userData == null ? (
+            <div>
+              <Button
+                size={buttSize}
+                style={{borderRadius: '0px'}}
+                onClick={() => setIsModalOpen(true)}
+                type={'primary'}
+                >Войти </Button>
+              <AuthModal 
+                visible={isModalOpen} 
+                onClose={() => setIsModalOpen(false)}
+                onLoginSuccess={authCallBack}
+              />
+            </div>
+
+          ) : (
+            
+            <div>
+            <Dropdown menu={{items: clientItems}}>
+              <Button
+                size={buttSize}
+                style={{borderRadius: '0px'}}
+              >
+                {userData.name}
+
+              </Button>
+              </Dropdown>
+            </div>
+          )}
       </div>
+
+      <AuthModal />
+
     </div>
     // </Affix>
   );

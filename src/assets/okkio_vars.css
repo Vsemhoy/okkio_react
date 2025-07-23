@@ -87,3 +87,7 @@ body {
     background: conic-gradient(from 210deg, rgb(197, 187, 184) 0deg, rgb(197, 187, 184) 24deg, rgb(184, 181, 184) 24deg, rgb(184, 181, 184) 48deg, rgb(169, 175, 183) 48deg, rgb(169, 175, 183) 72deg, rgb(154, 168, 181) 72deg, rgb(154, 168, 181) 96deg, rgb(139, 161, 179) 96deg, rgb(139, 161, 179) 120deg, rgb(125, 152, 175) 120deg, rgb(125, 152, 175) 144deg, rgb(112, 144, 171) 144deg, rgb(112, 144, 171) 168deg, rgb(101, 135, 166) 168deg, rgb(101, 135, 166) 192deg, rgb(92, 126, 161) 192deg, rgb(92, 126, 161) 216deg, rgb(85, 117, 155) 216deg, rgb(85, 117, 155) 240deg, rgb(81, 108, 148) 240deg, rgb(81, 108, 148) 264deg, rgb(79, 99, 141) 264deg, rgb(79, 99, 141) 288deg, rgb(80, 90, 133) 288deg, rgb(80, 90, 133) 312deg, rgb(84, 83, 125) 312deg, rgb(84, 83, 125) 336deg, rgb(91, 75, 116) 336deg, rgb(91, 75, 116) 360deg);
     min-height: 100vh;
 }
+
+code {
+        background: #eaeade;
+}

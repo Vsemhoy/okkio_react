@@ -12,3 +12,7 @@
     font-size: x-large;
     font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
+
+.mdxeditor-popup-container {
+    z-index: 9999 !important;
+}

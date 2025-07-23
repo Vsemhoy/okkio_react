@@ -6,13 +6,23 @@ import dayjs from 'dayjs';
 import FlowDateRow from './components/FlowDateRow';
 import FlowDayHeadRow from './components/FlowDayHeadRow';
 import EventEditorCom from '../EVEDITOR/EventEditorCom';
+import { useEventorStorage } from '../../../storage/localstorage/EventorStaorage';
+
 
 
 const EventorFlowPage = ({user_data, user_state}) => {
+
+  const { 
+    events,
+    addEvent,
+    getEvents
+  } = useEventorStorage();
+
     const [startMonth, setstartMonth] = useState(dayjs().startOf('month'));
     const [endMonth, setEndMonth] = useState(dayjs().endOf('month'));
 
     const [openModalEditor, setOpenModalEditor] = useState(false);
+    const [openModalEditorData, setOpenModalEditorData] = useState(null);
     const [openModalView, setOpenModalView] = useState(false);
     // const [openModalEditor, setOpenModalEditor] = useState(false);
 
@@ -21,6 +31,25 @@ const EventorFlowPage = ({user_data, user_state}) => {
     const [calendarDirection, setCalendarDirection] = useState(true);
 
     const [preHidden, setPreHidden] = useState(false);
+
+    const [baseEvents, setBaseEvents] = useState([]);
+    const [localEvents, setLocalEvents] = useState([]);
+    const [editedEvent, setEditedEvent] = useState(null);
+
+    useEffect(() => {
+      setBaseEvents(getEvents());
+    }, []);
+
+    const handleUpdateEvents = (ids)=> {
+        console.log('ids', ids)
+        setBaseEvents(getEvents());
+    }
+
+    useEffect(() => {
+      console.log('baseEvents', baseEvents)
+      setLocalEvents(baseEvents.filter((item)=> dayjs(item.setdate).isAfter(startMonth) && dayjs(item.setdate).isBefore(endMonth)));
+    }, [baseEvents]);
+
 
     useEffect(() => {
         setPreHidden(true);
@@ -118,12 +147,19 @@ const EventorFlowPage = ({user_data, user_state}) => {
         
     }
 
-    const handleOpenEditor = (date, id) => {
+    const handleOpenEditor = (date, section, id) => {
         setOpenModalEditor(true);
+        setEditedEvent({id: null, date: date, section: section});
     }
 
     const handleCloseEditor = (date, id) => {
 
+    }
+
+    const handleClickToChangeEvent = (id) => {
+
+        setEditedEvent({id: id});
+        setOpenModalEditor(true);
     }
 
 
@@ -179,7 +215,9 @@ const EventorFlowPage = ({user_data, user_state}) => {
                     </div>
                     <div className={"mi-pa-12"}>
                         {/* {startMonth.format('YYYY-MM-DD')} */}
-                        <div className={`scroll-container  hidden-control ${preHidden ?  'pre-hidden': 'no-hidden'}`}>
+                        <div className={`scroll-container  hidden-control ${preHidden ?  'pre-hidden': 'no-hidden'}`}
+                            key={"jfaklsjdf9043285"}
+                        >
                             {dateArray.map((dateg, index)=>(
                                 <>
                                     {dateg.type === 'day' && (
@@ -190,6 +228,8 @@ const EventorFlowPage = ({user_data, user_state}) => {
                                             on_open_editor={handleOpenEditor}
                                             on_close_editor={handleCloseEditor}
                                             on_open_view={handleOpenView}
+                                            events={localEvents.filter((item)=> dayjs(item.setdate).isSame(dateg.date, 'd') )}
+                                            on_change_trigger={handleClickToChangeEvent}
                                         />
                                     )}
                                     {dateg.type === 'dayheader' && (
@@ -260,9 +300,12 @@ const EventorFlowPage = ({user_data, user_state}) => {
 
  
         <EventEditorCom
+
             open={openModalEditor}
             onOk={() => setOpenModalEditor(false)}
             onCancel={() => setOpenModalEditor(false)}
+            data={editedEvent}
+            on_change={handleUpdateEvents}
         />
 
 

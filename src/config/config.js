@@ -9,6 +9,8 @@ export const BASE_NAME = PRODMODE ? '/utilizare' : '/';
 export const BASE_ROUTE = PRODMODE ? '/utilizare' : '';
 
 
+export const API_HOST = 'http://okkioserv/api';
+
 // console.log('HTTP ROOT', HTTP_ROOT);
 
 

@@ -2,3 +2,36 @@
     /* background-color: white; */
     max-width: 34em;
 }
+
+.remarkrenderer table {
+  border-collapse: collapse;
+  width: 100%;
+}
+.remarkrenderer th, td {
+  border: 1px solid #ddd;
+  padding: 4px;
+}
+.remarkrenderer th {
+  background-color: #f2f2f2;
+}
+
+
+div[class*="react-syntax-highlighter"] {
+  position: relative;
+  padding-left: 3rem !important;
+}
+
+/* Стиль для номеров строк */
+div[class*="react-syntax-highlighter"] span.line-number {
+  color: #777;
+  display: inline-block;
+  width: 2rem;
+  text-align: right;
+  margin-right: 0.5rem;
+  user-select: none;
+}
+
+/* Фикс для отступа первой строки */
+div[class*="react-syntax-highlighter"] span.line-number:first-of-type {
+  margin-top: 0;
+}

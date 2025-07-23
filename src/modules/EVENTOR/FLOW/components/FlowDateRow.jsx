@@ -13,10 +13,18 @@ const FlowDateRow = (props) => {
     const [isToday, setIsToday] = useState(false);
     const [preHidden, setPreHidden] = useState(false);
 
+
+
     useEffect(() => {
         setDate(props.date);
         setIsToday(date.format('DD-MM-YYYY') === dayjs().format('DD-MM-YYYY'));
     }, [props.date]);
+
+    useEffect(() => {
+      if (props.events){
+        setEventStack(props.events);
+      }
+    }, [props.events]);
 
     useEffect(() => {
         // Даём время на монтирование DOM
@@ -32,7 +40,7 @@ const FlowDateRow = (props) => {
             // let newobj = { date: date };
             // setEventStack([newobj, ...eventStack]);
             if (props.on_open_editor){
-                props.on_open_editor(date, null);
+                props.on_open_editor(date, null, null);
             }
         }
     }
@@ -75,8 +83,10 @@ const FlowDateRow = (props) => {
                 >
                     {eventStack.map((eve, index) => (
                         <EventorFlowDayCard
-                            key={index}
-                            date={eve.date}
+                            key={'evecat' + eve.id}
+                            date={eve.setdate}
+                            data={eve}
+                            on_change_trigger={props.on_change_trigger}
                         />
                     ))}
                 </div>

@@ -21,25 +21,30 @@ import TreeTaskPage from './modules/TASKER_MT/TREETASK_MT/TreeTaskPage';
 import KanbanPage from './modules/TASKER_MT/KANBAN_MT/KanbanPage';
 import ProjectPageMt from './modules/PROJECTS_MT/ProjectsPageMt';
 import EventorFlowPage from './modules/EVENTOR/FLOW/EventorFlowPage';
+import { useAuthMonitor } from './Hooks/UseAuthMonitor';
 
 
 function App() {
-  const [userProfile, setUserProfile] = useState(!PRODMODE ? DS_USER : []);
-  const [USER_STATE, setUSER_STATE] = useState({
-    role: 'client'
-  });
+  const { isAuthenticated, handleLogout } = useAuthMonitor();
+  const [userProfile, setUserProfile] = useState(null);
+
+  // const [userProfile, setUserProfile] = useState(!PRODMODE ? DS_USER : []);
+
   const [pageLoaded, setPageLoaded] = useState(true);
 
-      useEffect(() => {
-        if (PRODMODE){
-          get_userdata();
-        } else {
-          setUSER_STATE(prevState => ({
-            ...prevState, role: 'developer'
-          }) )
-        }
-        
-    }, []);
+
+
+  useEffect(() => {
+      const profile = localStorage.getItem('user');
+      setUserProfile(profile ? JSON.parse(profile) : null);
+    }, [isAuthenticated]); // Зависимость от статуса авторизации
+
+    // Пример защиты роутов
+    // if (!isAuthenticated && userProfile) {
+    //   handleLogout();
+    //   return <Redirect to="/login" />;
+    // }
+
 
   /** ------------------ FETCHES ---------------- */
     /**
@@ -70,30 +75,40 @@ function App() {
   }
   /** ------------------ FETCHES END ---------------- */
 
+  const handleAuth = (token, user) => {
+    if (token){
+      setUserProfile(user);
+    } else {
+      setUserProfile(null);
+    }
+  }
+
 
   return (
     <Layout>
       <BrowserRouter basename={BASE_NAME}>
         <div id='top'>
           <MenuBox
-            user_state={USER_STATE}
+            
+            user_data={userProfile}
+            on_auth={handleAuth}
           />
           
             <Routes>
-            <Route path={'/'} element={<MainFlowPage user_data={userProfile} user_state={USER_STATE}/>} />
-            <Route path={BASE_ROUTE + '/'} element={<MainFlowPage user_data={userProfile} user_state={USER_STATE}/>}  />
+            <Route path={'/'} element={<MainFlowPage user_data={userProfile}/>} />
+            <Route path={BASE_ROUTE + '/'} element={<MainFlowPage user_data={userProfile}/>}  />
 
-            <Route path={'/dev/tree'} element={<TreeTaskPage userdata={userProfile} user_state={USER_STATE}/>} />
-            <Route path={BASE_ROUTE + '/dev/tree'} element={<TreeTaskPage userdata={userProfile} user_state={USER_STATE}/>}/>
+            <Route path={'/dev/tree'} element={<TreeTaskPage userdata={userProfile}/>} />
+            <Route path={BASE_ROUTE + '/dev/tree'} element={<TreeTaskPage userdata={userProfile}/>}/>
 
-            <Route path={'/dev/kanban'} element={<KanbanPage userdata={userProfile} user_state={USER_STATE}/>} />
-            <Route path={BASE_ROUTE + '/dev/kanban'} element={<KanbanPage userdata={userProfile} user_state={USER_STATE}/>}/>
+            <Route path={'/dev/kanban'} element={<KanbanPage userdata={userProfile}/>} />
+            <Route path={BASE_ROUTE + '/dev/kanban'} element={<KanbanPage userdata={userProfile}/>}/>
 
-            <Route path={'/dev/projects'} element={<ProjectPageMt userdata={userProfile} user_state={USER_STATE}/>} />
-            <Route path={BASE_ROUTE + '/dev/projects'} element={<ProjectPageMt userdata={userProfile} user_state={USER_STATE}/>}/>
+            <Route path={'/dev/projects'} element={<ProjectPageMt userdata={userProfile}/>} />
+            <Route path={BASE_ROUTE + '/dev/projects'} element={<ProjectPageMt userdata={userProfile}/>}/>
 
-            <Route path={'/eventor'} element={<EventorFlowPage userdata={userProfile} user_state={USER_STATE}/>} />
-            <Route path={BASE_ROUTE + '/eventor'} element={<EventorFlowPage userdata={userProfile} user_state={USER_STATE}/>}/>
+            <Route path={'/eventor'} element={<EventorFlowPage userdata={userProfile}/>} />
+            <Route path={BASE_ROUTE + '/eventor'} element={<EventorFlowPage userdata={userProfile}/>}/>
 
             {/* <Route path={'/'} element={<MainPageUt userdata={userProfile}/>} />
             <Route path={BASE_ROUTE + '/'} element={<MainPageUt userdata={userProfile}/>}  />
