@@ -29,7 +29,7 @@ import {
 
 import { Button, Checkbox, Col, Dropdown, Flex, Input, Modal, Row, Tooltip, Typography } from 'antd';
 import './components/style/eventeditor.css';
-import { DeleteOutlined, DislikeOutlined, SaveFilled, SaveOutlined } from '@ant-design/icons';
+import { BorderOutlined, CarOutlined, CiCircleOutlined, DeleteOutlined, DislikeOutlined, SaveFilled, SaveOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 
 import { useEventorStorage } from '../../../storage/localstorage/EventorStaorage';
@@ -57,6 +57,7 @@ import { css } from '@codemirror/lang-css';
 
 import { dracula } from '@uiw/codemirror-theme-dracula';
 import { LANGUAGE_MAP, PROG_LANGS } from '../../../components/Definitions/Global/Lists/ProgLangs';
+import { BaseEventTypes } from '../cfg/EvTypes';
 
 
 const items = [
@@ -107,6 +108,7 @@ const EventEditorCom = (props) => {
     const [formName, setFormName] = useState('Hello Wolfd');
     const [formSetDate, setFormSetDate] = useState(dayjs());
     const [formSection, setFormSection] = useState(null);
+    const [formType, setFormType] = useState('SYSLWI7GB9DA6DIQKRNOGN843Y');
     
     const [preContent, setPreContent] = useState('');
 
@@ -116,6 +118,9 @@ const EventEditorCom = (props) => {
 
     const [langList, setLangList] = useState(['JavaScript']);
 
+    useEffect(() => {
+        console.log(BaseEventTypes);
+    }, []);
 
 
     useEffect(() => {
@@ -145,6 +150,7 @@ const EventEditorCom = (props) => {
                 setFormContent(evt.content);
                 const langs = extractCodeLanguages(evt.content);
                 setLangList(langs);
+                setFormType(evt.evtype ? evt.evtype : formType);
             } else {
                 setFormContent('');
                 setFormName('New');
@@ -159,6 +165,7 @@ const EventEditorCom = (props) => {
             setFormName("");
             setFormContent("");
             setLangList(['JavaScript']);
+            // setFormType()
             // setFormSetDate(props.date);
         }
         setBlockAction(false);
@@ -180,6 +187,7 @@ const EventEditorCom = (props) => {
                     setdate: formSetDate.format('YYYY-MM-DD hh:mm:ss'),
                     createdAt: null,
                     updatedAt: dayjs().format('YYYY-MM-DD hh:mm:ss'),
+                    evtype: formType ? formType : null,
                 };
                 updateEvent(event.id, event);
             } else {
@@ -190,6 +198,7 @@ const EventEditorCom = (props) => {
                     setdate: formSetDate.format('YYYY-MM-DD hh:mm:ss'),
                     createdAt: dayjs().format('YYYY-MM-DD hh:mm:ss'),
                     updatedAt: dayjs().format('YYYY-MM-DD hh:mm:ss'),
+                    evtype: formType ? formType : null,
                 };
                 addEvent(event.id, event);
                 console.log('event', event);
@@ -426,15 +435,14 @@ const extractCodeLanguages = (markdown) => {
     const observer = new MutationObserver(() => {
         const ppcu = document.querySelector('.mdxeditor-popup-container');
         if (ppcu){
-            console.log('ppcu', ppcu);
-            console.log('ppcu.innerTEXT', ppcu.innerHTML);
             const spans = ppcu.querySelectorAll('span');
             let index = 0;
             console.log('spans.length', spans.length)
             Array.from(spans).forEach(span => {
                 // console.log('span', span)
                 if (span.id !== null && span.id.includes('radix')){
-                    console.log('span', span, index++);
+                    // console.log('span', span, );
+                    index++;
                     if (span.innerText === ""){
                         span.innerText = PROG_LANGS[index];
                     }
@@ -480,11 +488,31 @@ const extractCodeLanguages = (markdown) => {
                     onClick={()=>{setMode('editor')}}
                 >Editor</Button>
             )}
-            <Button
-                size={'large'}
+
+            <Dropdown menu={{ items: BaseEventTypes.map((item)=>(
+                {
+                    key: item.id,
+                    value: item.id,
+                    label: item.name,
+                    onClick: (ev)=> {setFormType(ev.key)},
+                    icon: <BorderOutlined />
+                }
+                ))}}
+                value={formType}
+                // onChange={(ev)=> {console.log(ev.target.value)}}
+                // onClick={(ev)=> {console.log(ev.target.value)}}
+                >
+                <Tooltip title={BaseEventTypes.find((item) => item.id === formType)?.name ?? "No type"}>
+                <Button
+                    size={'large'}
+                    style={{background: BaseEventTypes.find((item) => item.id === formType)?.bgcolor, color: BaseEventTypes.find((item) => item.id === formType)?.color}}
             >
-                <span className={'evt-modal-type-trigger'}>Tp</span>
-            </Button>
+                    <span className={'evt-modal-type-trigger'}>
+                    { BaseEventTypes.find((item) => item.id === formType)?.name?.substring(0,3).toUpperCase() ?? "..."}
+                    </span>
+                </Button>
+                </Tooltip>
+            </Dropdown>
         </div>}
         centered
         open={props.open}

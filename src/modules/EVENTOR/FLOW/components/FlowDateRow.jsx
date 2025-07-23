@@ -23,6 +23,7 @@ const FlowDateRow = (props) => {
     useEffect(() => {
       if (props.events){
         setEventStack(props.events);
+        console.log('props.events', props.events)
       }
     }, [props.events]);
 

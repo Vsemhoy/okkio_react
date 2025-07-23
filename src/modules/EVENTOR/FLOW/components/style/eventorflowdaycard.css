@@ -3,17 +3,9 @@
     max-width: 34em;
 }
 
-.remarkrenderer table {
-  border-collapse: collapse;
-  width: 100%;
-}
-.remarkrenderer th, td {
-  border: 1px solid #ddd;
-  padding: 4px;
-}
-.remarkrenderer th {
-  background-color: #f2f2f2;
-}
+
+
+
 
 
 div[class*="react-syntax-highlighter"] {

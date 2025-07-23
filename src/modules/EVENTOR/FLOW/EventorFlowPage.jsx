@@ -42,6 +42,7 @@ const EventorFlowPage = ({user_data, user_state}) => {
 
     const handleUpdateEvents = (ids)=> {
         console.log('ids', ids)
+        console.log('getEvents()', getEvents());
         setBaseEvents(getEvents());
     }
 
@@ -55,7 +56,7 @@ const EventorFlowPage = ({user_data, user_state}) => {
         setPreHidden(true);
         setTimeout(() => {
             setPreHidden(false);
-        }, 1300);
+        }, 700);
     }, [startMonth, endMonth, calendarDirection]);
 
 
