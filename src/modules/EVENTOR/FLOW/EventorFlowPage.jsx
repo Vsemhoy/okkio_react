@@ -54,6 +54,7 @@ const EventorFlowPage = ({user_data, user_state}) => {
 
     useEffect(() => {
         setPreHidden(true);
+        setBaseEvents(getEvents());
         setTimeout(() => {
             setPreHidden(false);
         }, 700);

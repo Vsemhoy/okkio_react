@@ -27,7 +27,7 @@ import {
   codeMirrorPlugin
 } from '@mdxeditor/editor';
 
-import { Button, Checkbox, Col, Dropdown, Flex, Input, Modal, Row, Tooltip, Typography } from 'antd';
+import { Button, Checkbox, Col, DatePicker, Dropdown, Flex, Input, Modal, Row, Select, Tooltip, Typography } from 'antd';
 import './components/style/eventeditor.css';
 import { BorderOutlined, CarOutlined, CiCircleOutlined, DeleteOutlined, DislikeOutlined, SaveFilled, SaveOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
@@ -97,7 +97,11 @@ const EventEditorCom = (props) => {
         addEvent,
         getEvent,
         getEvents,
-        updateEvent
+        updateEvent,
+
+        getSection,
+        getSections,
+        getEvtypes,
     } = useEventorStorage();
 
     const [itemId, setItemId] = useState(null);
@@ -109,6 +113,14 @@ const EventEditorCom = (props) => {
     const [formSetDate, setFormSetDate] = useState(dayjs());
     const [formSection, setFormSection] = useState(null);
     const [formType, setFormType] = useState('SYSLWI7GB9DA6DIQKRNOGN843Y');
+    const [formLocation, setFormLocation] = useState(null);
+    const [formGroup, setFormGroup] = useState(null);
+    const [formProject, setFormProject] = useState(null);
+    const [formStatus, setFormStatus] = useState(null);
+    const [formAccess, setFormAccess] = useState(null);
+    const [formCommentAccess, setFormCommentAccess] = useState(null);
+
+    const [sectionList, setSectionList] = useState([]);
     
     const [preContent, setPreContent] = useState('');
 
@@ -119,8 +131,24 @@ const EventEditorCom = (props) => {
     const [langList, setLangList] = useState(['JavaScript']);
 
     useEffect(() => {
-        console.log(BaseEventTypes);
-    }, []);
+        let a =  getSections().map((item)=>(
+            { 
+                key: "sect_" + item.id ,
+                label: item.name,
+                value: item.id
+            }
+        ));
+        a.unshift({ key: 'sect_null', label: 'No section', value: 0});
+        console.log('a', a)
+        setSectionList(a);
+    }, [props.open]);
+    const handleChangeSection = (val) => {
+        if (val == 0){
+            setFormSection(null);
+        } else {
+            setFormSection(val);
+        }
+    }
 
 
     useEffect(() => {
@@ -151,6 +179,7 @@ const EventEditorCom = (props) => {
                 const langs = extractCodeLanguages(evt.content);
                 setLangList(langs);
                 setFormType(evt.evtype ? evt.evtype : formType);
+                setFormSection(evt.section ?? 0);
             } else {
                 setFormContent('');
                 setFormName('New');
@@ -161,7 +190,7 @@ const EventEditorCom = (props) => {
             setItemId(null);
             console.log('props.data', props.data)
             setFormSetDate(props.data?.date);
-            setFormSection(props.data?.section);
+            setFormSection(props.data?.section ?? 0);
             setFormName("");
             setFormContent("");
             setLangList(['JavaScript']);
@@ -188,6 +217,7 @@ const EventEditorCom = (props) => {
                     createdAt: null,
                     updatedAt: dayjs().format('YYYY-MM-DD hh:mm:ss'),
                     evtype: formType ? formType : null,
+                    section: formSection ? formSection : null,
                 };
                 updateEvent(event.id, event);
             } else {
@@ -199,6 +229,7 @@ const EventEditorCom = (props) => {
                     createdAt: dayjs().format('YYYY-MM-DD hh:mm:ss'),
                     updatedAt: dayjs().format('YYYY-MM-DD hh:mm:ss'),
                     evtype: formType ? formType : null,
+                    section: formSection ? formSection : null,
                 };
                 addEvent(event.id, event);
                 console.log('event', event);
@@ -461,6 +492,14 @@ const extractCodeLanguages = (markdown) => {
 
 
 
+
+
+
+
+
+
+
+
   return (
     <div>
      <Modal className={'ev-editor-modal'}
@@ -679,15 +718,12 @@ const extractCodeLanguages = (markdown) => {
 
                             <div>
                             <Typography.Text>Секция</Typography.Text>
-                            <Input
-                                count={{
-                                show: true,
-                                max: 6,
-                                //   strategy: txt => runes(txt).length,
-                                
-                                }}
-                                defaultValue="🔥 antd"
-                            />
+                            <div>
+                                <Select options={sectionList} value={formSection}
+                                    style={{width: '100%'}}
+                                    onChange={handleChangeSection}
+                                />
+                            </div>
                             </div>
 
                             <div>
@@ -722,13 +758,15 @@ const extractCodeLanguages = (markdown) => {
 
                         <div>
                         <Typography.Text>Дата</Typography.Text>
-                        <Input
-                            count={{
-                            show: true,
-                            
-                            }}
-                            defaultValue="🔥🔥🔥"
+                        <div>
+                        <DatePicker
+                            value={formSetDate}
+                            onChange={setFormSetDate}
+                            showTime
+                            style={{width: '100%'}}
                         />
+
+                        </div>
                         </div>
 
                         <div>
