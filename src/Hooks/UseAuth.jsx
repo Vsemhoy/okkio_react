@@ -44,7 +44,7 @@ export const useAuth = () => {
     return { user, login, logout };
 };
 
-    export const logout = async () => {
+    export const logout = async (clear = true) => {
         const token = Cookies.get('jwt');
         console.log('token', token);
         
@@ -58,7 +58,10 @@ export const useAuth = () => {
             )
             if (response){
                 Cookies.remove('jwt');
-                localStorage.removeItem('user');
+                if (clear){
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('eventor');
+                }
                 return(true);
             }
         } catch (e) {

@@ -39,12 +39,20 @@ const MenuBox = (props) => {
     setUserData(props.user_data);
   }, [props.user_data]);
 
-  const handleLogout = () => {
-    let result = logout();
+  const handleLogoutClear = () => {
+    let result = logout(true);
     if (result){
       props.on_auth(null, null);
     }
   }
+
+    const handleLogout = () => {
+    let result = logout(false);
+    if (result){
+      props.on_auth(null, null);
+    }
+  }
+  
 
 const clientItems = [
   {
@@ -52,6 +60,13 @@ const clientItems = [
       onClick={handleLogout}
     >Logout</div>,
     key: '1535',
+    icon: <WechatWorkOutlined />,
+  },
+    {
+    label: <div
+      onClick={handleLogoutClear}
+    >Logout and Clear all cache</div>,
+    key: '153d5',
     icon: <WechatWorkOutlined />,
   },
 ];

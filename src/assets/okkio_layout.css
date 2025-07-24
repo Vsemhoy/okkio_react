@@ -387,7 +387,7 @@
     display: block;
     background-color: #000000b8;
     position: absolute;
-    right: 16px;
+    right: 10px;
     margin-top: -6px;
     padding: 0px 12px;
     color: #e2e2e2;
@@ -398,4 +398,8 @@
 }
 .code-badge.copied {
     background-color: #0099ff78;
+}
+
+.ant-card-body {
+    padding: 16px !important;
 }

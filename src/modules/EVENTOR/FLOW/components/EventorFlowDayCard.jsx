@@ -105,6 +105,7 @@ const EventorFlowDayCard = (props) => {
         <EllipsisOutlined key="ellipsis" />,
       ]}
     >
+    
       {name.length > 0 && (
         <Meta
           // avatar={<LockTwoTone />}
@@ -155,7 +156,7 @@ const EventorFlowDayCard = (props) => {
             {trimContent}
           </ReactMarkdown>
 
-
+        
       </div>
     </Card>
 
