@@ -9,7 +9,7 @@ const generateId = (prefix = '') => {
 
 export const BaseEventTypes = [
     {
-    id: null,
+    id: 0,
     user_id: 'SYSTEM00000000000000000000',
     name: 'No type',
     color: "#999",

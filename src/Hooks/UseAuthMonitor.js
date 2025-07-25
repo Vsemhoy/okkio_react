@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import axios from 'axios';
+import { PROD_AXIOS_INSTANCE } from '../API/API';
 
 export const useAuthMonitor = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -14,19 +15,20 @@ export const useAuthMonitor = () => {
         if (!token || !userData) {
           setIsAuthenticated(false);
           Cookies.remove('jwt');
-          localStorage.removeItem('user');
+          // localStorage.removeItem('user');
           return;
         }
 
         // Опционально: проверяем токен через API
-        await axios.get('/api/auth/validate', {
+        await PROD_AXIOS_INSTANCE.post('/auth/validate', {}, {
           headers: { Authorization: `Bearer ${token}` }
         });
         
-        console.log('end', 34534)
+        console.log('VALIDATE ME', token);
         setIsAuthenticated(true);
       } catch (error) {
         handleLogout();
+        console.log('VALIDTATE UN');
       }
     };
 

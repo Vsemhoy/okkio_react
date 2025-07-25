@@ -21,14 +21,14 @@ const AuthModal = ({ visible, onClose, onLoginSuccess }) => {
             // Сохраняем токен из ответа
             console.log('response.data', response.data)
                 if (response.data?.access_token) {
-                    Cookies.set('jwt_token', response.data.access_token, {
+                    Cookies.set('jwt', response.data.access_token, {
                         secure: true,
                         sameSite: 'Strict'
                     });
                     success = true;
                     token =  response.data.access_token;
                 } else {
-                    Cookies.remove('jwt_token');
+                    Cookies.remove('jwt');
                 }
                 
                 // Сохраняем пользователя

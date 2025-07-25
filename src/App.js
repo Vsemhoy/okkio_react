@@ -96,19 +96,19 @@ function App() {
           
             <Routes>
             <Route path={'/'} element={<MainFlowPage user_data={userProfile}/>} />
-            <Route path={BASE_ROUTE + '/'} element={<MainFlowPage user_data={userProfile}/>}  />
+            {/* <Route path={BASE_ROUTE + '/'} element={<MainFlowPage user_data={userProfile}/>}  /> */}
 
             <Route path={'/dev/tree'} element={<TreeTaskPage userdata={userProfile}/>} />
-            <Route path={BASE_ROUTE + '/dev/tree'} element={<TreeTaskPage userdata={userProfile}/>}/>
+            {/* <Route path={BASE_ROUTE + '/dev/tree'} element={<TreeTaskPage userdata={userProfile}/>}/> */}
 
             <Route path={'/dev/kanban'} element={<KanbanPage userdata={userProfile}/>} />
-            <Route path={BASE_ROUTE + '/dev/kanban'} element={<KanbanPage userdata={userProfile}/>}/>
+            {/* <Route path={BASE_ROUTE + '/dev/kanban'} element={<KanbanPage userdata={userProfile}/>}/> */}
 
             <Route path={'/dev/projects'} element={<ProjectPageMt userdata={userProfile}/>} />
-            <Route path={BASE_ROUTE + '/dev/projects'} element={<ProjectPageMt userdata={userProfile}/>}/>
+            {/* <Route path={BASE_ROUTE + '/dev/projects'} element={<ProjectPageMt userdata={userProfile}/>}/> */}
 
             <Route path={'/eventor'} element={<EventorFlowPage userdata={userProfile}/>} />
-            <Route path={BASE_ROUTE + '/eventor'} element={<EventorFlowPage userdata={userProfile}/>}/>
+            {/* <Route path={BASE_ROUTE + '/eventor'} element={<EventorFlowPage userdata={userProfile}/>}/> */}
 
             {/* <Route path={'/'} element={<MainPageUt userdata={userProfile}/>} />
             <Route path={BASE_ROUTE + '/'} element={<MainPageUt userdata={userProfile}/>}  />

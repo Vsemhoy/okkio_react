@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './style/flowdayheadrow.css';
 import { Affix } from 'antd';
 import { getMonthColor } from '../../../../utils/Text/DateUtils';
+import { GetMonthName } from '../../../../locals/Lists/MonthNameLocals';
 
 const  FlowDayHeadRow = (props) => {
 
@@ -19,11 +20,11 @@ const  FlowDayHeadRow = (props) => {
             style={{'backgroundColor': getMonthColor(date.month())}}
         >
         <div className={'flow-date-head-row'}>
-            <div>
-                {date.format('MM-YYYY')}
+            <div className={'flow-date-header'}>
+                {GetMonthName(date.month() + 1, 'en')} {date.format('YYYY')}
             </div>
             <div>
-                Hello
+                
             </div>
         </div>
         </div>

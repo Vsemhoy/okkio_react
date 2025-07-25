@@ -68,6 +68,8 @@ export const useEventorStorage = () => {
     };
 
     const getEvent = (id) => {
+        console.log('id', id)
+        console.log('storage.events', storage.events)
         return storage.events[id] || null;
     };
 

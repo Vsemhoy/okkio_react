@@ -35,7 +35,7 @@ const EventorFlowDayCard = (props) => {
         setContent(props.data.content);
         setName(props.data.name);
         setSetdate(props.data.setdate);
-        setType(props.data.evtype ? props.data.evtype : null);
+        setType(props.data.type_id ? props.data.type_id : null);
         setTrimContent(eventCardTrimContent(props.data.content));
 
         
@@ -163,6 +163,14 @@ const EventorFlowDayCard = (props) => {
 
       <Modal 
         open={openViewer}
+        // width={{
+        //   xs: '90%',
+        //   sm: '80%',
+        //   md: '70%',
+        //   lg: '60%',
+        //   xl: '50%',
+        //   xxl: '40%',
+        // }}
         title={<div className='mi-pa-6' style={{borderBottom: '1px solid #c9c9c9'}}>{name}</div>}
         onCancel={()=>{setOpenViewer(false)}}
         footer={<div>

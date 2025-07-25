@@ -58,6 +58,10 @@ import { css } from '@codemirror/lang-css';
 import { dracula } from '@uiw/codemirror-theme-dracula';
 import { LANGUAGE_MAP, PROG_LANGS } from '../../../components/Definitions/Global/Lists/ProgLangs';
 import { BaseEventTypes } from '../cfg/EvTypes';
+import { PROD_AXIOS_INSTANCE } from '../../../API/API';
+
+
+import Cookies from "js-cookie";
 
 
 const items = [
@@ -98,6 +102,7 @@ const EventEditorCom = (props) => {
         getEvent,
         getEvents,
         updateEvent,
+        removeEvent,
 
         getSection,
         getSections,
@@ -166,10 +171,51 @@ const EventEditorCom = (props) => {
     }, [formContent]);
 
 
-    useEffect(() => {
-        if (props.data?.id){
-            // console.log('props.data?.id', props.data?.id)
+
+
+    useEffect(() =>  {
+        loadDataAction();
+    }, [props.data]);
+
+
+    const loadDataAction = async () => {
+              if (props.data?.id){
+          let loadedFromServer = false;
+          // OPEN EXISTED
+            console.log('props.data?.id', props.data)
             setItemId(props.data?.id);
+
+
+          if (!props.data.id.includes('temp_')){
+            try {
+              const response = await PROD_AXIOS_INSTANCE.post('/eventor/getmyevent/' + props.data.id, 
+                {}, {
+                headers: {
+                  'Authorization': 'Bearer ' + Cookies.get('jwt')
+                }
+              });
+
+              // console.log('response', response)
+                const data = response.data.content;
+                loadedFromServer = true;
+                setFormSetDate(dayjs(data.setdate));
+                setFormName(data.name);
+                setFormContent(data.content);
+                const langs = extractCodeLanguages(data.content);
+                setLangList(langs);
+                setFormType(data.type_id ? data.type_id : formType);
+                setFormSection(data.section ?? 0);
+
+            }
+            catch (error) {
+              console.error('Sync failed:', error);
+
+            } finally {
+              
+            }
+          }
+
+          if (!loadedFromServer){
             let evt = getEvent(props.data?.id);
             console.log('evt', evt)
             if (evt){
@@ -178,17 +224,20 @@ const EventEditorCom = (props) => {
                 setFormContent(evt.content);
                 const langs = extractCodeLanguages(evt.content);
                 setLangList(langs);
-                setFormType(evt.evtype ? evt.evtype : formType);
+                setFormType(evt.type_id ? evt.type_id : formType);
                 setFormSection(evt.section ?? 0);
             } else {
                 setFormContent('');
                 setFormName('New');
                 setFormSetDate(dayjs());
             }
+          }
+
             
         } else {
+          // CREATE NEW
             setItemId(null);
-            console.log('props.data', props.data)
+
             setFormSetDate(props.data?.date);
             setFormSection(props.data?.section ?? 0);
             setFormName("");
@@ -198,65 +247,149 @@ const EventEditorCom = (props) => {
             // setFormSetDate(props.date);
         }
         setBlockAction(false);
-    }, [props.data]);
+    }
+
 
 
     useEffect(() => {
     //   setPreContent(formContent);
     }, [formContent]);
 
-    const handleSaveData = () => {
-        if (!blockAction){
-            setBlockAction(true);
-            if (itemId){
-                const event = {
-                    id: itemId,
-                    content: formContent,
-                    name: formName,
-                    setdate: formSetDate.format('YYYY-MM-DD hh:mm:ss'),
-                    createdAt: null,
-                    updatedAt: dayjs().format('YYYY-MM-DD hh:mm:ss'),
-                    evtype: formType ? formType : null,
-                    section: formSection ? formSection : null,
-                };
-                updateEvent(event.id, event);
-            } else {
-                const event = {
-                    id: 'new_' + dayjs().unix(),
-                    content: formContent,
-                    name: formName,
-                    setdate: formSetDate.format('YYYY-MM-DD hh:mm:ss'),
-                    createdAt: dayjs().format('YYYY-MM-DD hh:mm:ss'),
-                    updatedAt: dayjs().format('YYYY-MM-DD hh:mm:ss'),
-                    evtype: formType ? formType : null,
-                    section: formSection ? formSection : null,
-                };
-                addEvent(event.id, event);
-                console.log('event', event);
-                setItemId(event.id);
-            }
+    // const handleSaveData = () => {
+    //     if (!blockAction){
+    //         setBlockAction(true);
+    //         if (itemId){
+    //             const event = {
+    //                 id: itemId,
+    //                 content: formContent,
+    //                 name: formName,
+    //                 setdate: formSetDate.format('YYYY-MM-DD hh:mm:ss'),
+    //                 createdAt: null,
+    //                 updatedAt: dayjs().format('YYYY-MM-DD hh:mm:ss'),
+    //                 section: formSection ? formSection : null,
+    //                 type_id: formType ? formType : null,
+    //                 location: null,
+    //                 project_id: null,
+    //                 category_id: null,
+    //                 metadata: null,
+    //                 access: 1,
+    //                 status: 1,
+    //                 syncStatus: 'pending', // 'pending', 'synced', 'error'
+    //                 serverId: null, // настоящий ID после синхронизации
+    //             };
+    //             updateEvent(event.id, event);
+    //         } else {
+    //             const event = {
+    //                 id: 'temp_' + dayjs().unix(),
+    //                 content: formContent,
+    //                 name: formName,
+    //                 setdate: formSetDate.format('YYYY-MM-DD hh:mm:ss'),
+    //                 createdAt: dayjs().format('YYYY-MM-DD hh:mm:ss'),
+    //                 updatedAt: dayjs().format('YYYY-MM-DD hh:mm:ss'),
+    //                 section: formSection ? formSection : null,
+    //                 type_id: formType ? formType : null,
+    //                 location: null,
+    //                 project_id: null,
+    //                 category_id: null,
+    //                 metadata: null,
+    //                 access: 1,
+    //                 status: 1,
+    //                 syncStatus: 'pending', // 'pending', 'synced', 'error'
+    //                 serverId: null, // настоящий ID после синхронизации
+    //             };
+    //             addEvent(event.id, event);
+    //             console.log('event', event);
+    //             setItemId(event.id);
+    //         }
     
             
-            setTimeout(() => {
-                setBlockAction(false);
-                if (props.on_change){
-                    console.log('props', props)
-                    props.on_change([itemId]);
-                }
-            }, 1500);
+    //         setTimeout(() => {
+    //             setBlockAction(false);
+    //             if (props.on_change){
+    //                 console.log('props', props)
+    //                 props.on_change([itemId]);
+    //             }
+    //         }, 1500);
+    //     }
+    // }
+
+
+  const handleSaveData = async () => {
+    console.log('🔥 handleSaveData вызван', Date.now());
+    if (blockAction) return;
+    setBlockAction(true);
+
+    const now = dayjs().format('YYYY-MM-DD HH:mm:ss');
+    const tempId = itemId || 'temp_' + Date.now();
+
+    const event = {
+      id: tempId,
+      content: formContent,
+      name: formName,
+      setdate: formSetDate.format('YYYY-MM-DD HH:mm:ss'),
+      createdAt: itemId ? null : now,
+      updatedAt: now,
+      section: formSection || null,
+      type_id: formType != null && formType != 0 ? formType : null,
+      access: 1,
+      status: 1,
+      syncStatus: 'pending',
+      serverId: null,
+    };
+
+    try {
+      // 1. Сохраняем в локальное хранилище
+      if (itemId) {
+        updateEvent(tempId, event);
+      } else {
+        addEvent(tempId, event);
+        setItemId(tempId);
+      }
+      console.log(Cookies.get('jwt'));
+      // 2. Отправляем на сервер
+      const response = await PROD_AXIOS_INSTANCE.post('/eventor/saveevent', 
+        event, {
+        headers: {
+          'Authorization': 'Bearer ' + Cookies.get('jwt')
         }
+      });
+
+      // 3. Если успех — обновляем локальное событие
+      const savedEvent = response.data.content;
+      if (tempId.includes('temp_')){
+        removeEvent(tempId);
+        addEvent(savedEvent.id, {...savedEvent, serverId: savedEvent.id,
+          syncStatus: 'synced'});
+      } else {
+
+        updateEvent(tempId, {
+          ...savedEvent,
+          id: savedEvent.id,
+          serverId: savedEvent.id,
+          syncStatus: 'synced'
+        });
+      }
+
+    } catch (error) {
+      console.error('Sync failed:', error);
+      // Оставляем в хранилище с syncStatus: 'pending'
+      // Пользователь увидит: "Не синхронизировано"
+    } finally {
+      setTimeout(() => {
+        setBlockAction(false);
+        if (props.on_change) {
+          props.on_change([tempId]);
+        }
+      }, 1500);
     }
-
-
-
-    
+  };
 
 
     const debounceTimeoutRef = useRef(null);
 
     // Оптимизированный обработчик с debounce
     const handleContentChange = useCallback((newMarkdown) => {
-        console.log('New content (debounced):', newMarkdown);
+        // console.log('New content (debounced):', newMarkdown);
         
         // Очищаем предыдущий таймаут
         if (debounceTimeoutRef.current) {
@@ -604,6 +737,9 @@ const extractCodeLanguages = (markdown) => {
           xl: '65%',
           xxl: '50%',
         }}
+
+        style={{maxWidth: '900px'}}
+
       >
         <div className={'ev-editor-modal-content-wrapper'}>
             {mode === 'editor' && (

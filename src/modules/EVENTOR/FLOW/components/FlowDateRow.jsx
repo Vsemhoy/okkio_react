@@ -3,6 +3,8 @@ import './style/flowdaterow.css';
 import EventorFlowDayCard from './EventorFlowDayCard';
 import { Affix } from 'antd';
 import dayjs from 'dayjs';
+import { GetMonthName } from '../../../../locals/Lists/MonthNameLocals';
+import { GetDayName } from '../../../../locals/Lists/WeekDayNameLocals';
 
 const FlowDateRow = (props) => {
     const containerRef = useRef(null);
@@ -54,7 +56,7 @@ const FlowDateRow = (props) => {
 
     return (
         <div className={`flow-date-row-wrapper hidden-control ${preHidden ?  'pre-hiddens': ''}`}>
-            <div className={`flow-date-row ${isToday ? 'today' : ''}`}>
+            <div className={`flow-date-row ${isToday ? 'today' : ''} ${date.day() === 0 || date.day() === 6 ? "weekend" : ""}`}>
                 <div
                     className='scrollable-container'
                     ref={containerRef}
@@ -71,8 +73,11 @@ const FlowDateRow = (props) => {
                             target={() => containerRef.current}
                             offsetTop={0}
                         >
-                            <div style={{  background: '#fff' }}>
-                                {date.format('DD-MM')}
+                            <div className='flow-date-cell'>
+                                <div>
+                                    {GetMonthName(date.month() + 1, 'EN')} {date.format('DD')} {GetDayName(date.day(), 'en', true)}
+
+                                </div>
                             </div>
                         </Affix>
                     )}

@@ -8,7 +8,7 @@ import { Link, NavLink } from 'react-router-dom';
 import { USER_STATE } from '../../../../config/config';
 import AuthModal from '../../../Auth/AuthModal';
 import { logout, useAuth } from '../../../../Hooks/UseAuth';
-
+import Cookies from "js-cookie";
 
 
 
@@ -186,13 +186,13 @@ const developerItems = [
         </NavLink> */}
       </div>
       <div className={'mi-flex'}>
-        <NavLink to={'/settings'}
+        {/* <NavLink to={'/settings'}
         className={({ isActive }) => isActive ? 'mi-active' : ''}
         >
           <Button type="text" size={buttSize}>
             Настройки
           </Button>
-        </NavLink>
+        </NavLink> */}
 
           {userData == null ? (
             <div>

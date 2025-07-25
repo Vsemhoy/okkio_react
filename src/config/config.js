@@ -5,11 +5,11 @@ export const HTTP_HOST  = document.querySelector('meta[name="host"]') ? document
 export const HTTP_ROOT = HTTP_HOST ? HTTP_HOST.replace('utilizare', '') : '';
 export const HOST_COMPONENT_ROOT = !PRODMODE ? '' : '/com/utilizare';
 
-export const BASE_NAME = PRODMODE ? '/utilizare' : '/';
-export const BASE_ROUTE = PRODMODE ? '/utilizare' : '';
+export const BASE_NAME = PRODMODE ? '/' : '/';
+export const BASE_ROUTE = PRODMODE ? '/' : '';
 
 
-export const API_HOST = 'http://okkioserv/api';
+export const API_HOST = PRODMODE ? 'https://okback.okkio.ru/api' : 'http://okkioserv/api';
 
 // console.log('HTTP ROOT', HTTP_ROOT);
 

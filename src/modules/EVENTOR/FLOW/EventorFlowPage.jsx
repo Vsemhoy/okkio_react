@@ -7,15 +7,17 @@ import FlowDateRow from './components/FlowDateRow';
 import FlowDayHeadRow from './components/FlowDayHeadRow';
 import EventEditorCom from '../EVEDITOR/EventEditorCom';
 import { useEventorStorage } from '../../../storage/localstorage/EventorStaorage';
+import { PROD_AXIOS_INSTANCE } from '../../../API/API';
 
-
+import Cookies from "js-cookie";
 
 const EventorFlowPage = ({user_data, user_state}) => {
 
   const { 
     events,
     addEvent,
-    getEvents
+    getEvents,
+    removeEvent
   } = useEventorStorage();
 
     const [startMonth, setstartMonth] = useState(dayjs().startOf('month'));
@@ -37,8 +39,51 @@ const EventorFlowPage = ({user_data, user_state}) => {
     const [editedEvent, setEditedEvent] = useState(null);
 
     useEffect(() => {
-      setBaseEvents(getEvents());
+        loadEventsAction(startMonth, endMonth, null);
     }, []);
+
+
+
+    const loadEventsAction = async (start, end, section) => {
+        let loadedFromServer = false;
+        setPreHidden(true);
+        try {
+            const response = await PROD_AXIOS_INSTANCE.post('/eventor/getmyevents', 
+            {
+                start: start,
+                end: end,
+                section: section
+            }, {
+                headers: {
+                    'Authorization': 'Bearer ' + Cookies.get('jwt')
+                }
+            });
+            const eventsToRemoveFromCache = [];
+            let prevEvents = getEvents(start, end, section);
+            
+            
+            for (let i = 0; i < prevEvents.length; i++) {
+                removeEvent(prevEvents[i].id);
+            }
+
+            const data = response.data.content;
+            for (let i = 0; i < data.length; i++) {
+                addEvent(data[i].id, data[i]);
+            }
+            setBaseEvents(data);
+            loadedFromServer = true;
+        } catch {
+
+        }
+
+        if (!loadedFromServer){
+            setBaseEvents(getEvents());
+        }
+        setTimeout(() => {
+            setPreHidden(false);
+        }, 700);
+    }
+
 
     const handleUpdateEvents = (ids)=> {
         console.log('ids', ids)
@@ -54,7 +99,8 @@ const EventorFlowPage = ({user_data, user_state}) => {
 
     useEffect(() => {
         setPreHidden(true);
-        setBaseEvents(getEvents());
+        // setBaseEvents(getEvents());
+        loadEventsAction(startMonth, endMonth, null);
         setTimeout(() => {
             setPreHidden(false);
         }, 700);
@@ -215,7 +261,7 @@ const EventorFlowPage = ({user_data, user_state}) => {
                             /></div>
                         </div>
                     </div>
-                    <div className={"mi-pa-12"}>
+                    <div className={"adaptive-layout"}>
                         {/* {startMonth.format('YYYY-MM-DD')} */}
                         <div className={`scroll-container  hidden-control ${preHidden ?  'pre-hidden': 'no-hidden'}`}
                             key={"jfaklsjdf9043285"}

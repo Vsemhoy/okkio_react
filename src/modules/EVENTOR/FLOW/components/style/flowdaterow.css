@@ -5,16 +5,29 @@
 
 .flow-date-row {
     display: grid;
-    grid-template-columns: 150px auto;
+    grid-template-columns: 126px auto;
     background-color: rgba(255, 255, 255, 0.403);
     backdrop-filter: blur(32px);
     transition: all 0.3s;
     min-height: 44px;
     /* border-bottom: 1px solid #ffffff85; */
 }
+.adaptive-layout {
+    padding: 12px;
+}
+
+@media screen and (max-width: 768px) {
+    .flow-date-row {
+        grid-template-columns: 100% !important;
+        grid-template-rows: auto auto;
+    }
+    .adaptive-layout {
+    padding: 0px;
+}
+}
 
 .flow-date-row > div {
-    padding: 12px;
+    padding: 6px;
 }
 
 .flow-date-row-wrapper:hover > div {
@@ -29,6 +42,26 @@
     background-color: burlywood;
 }
 
-.flow-date-row.today {
-        border-left: 6px solid #0092ff;
+
+
+.flow-date-cell {
+    display: flex;
+}
+.flow-date-cell > div {
+    background-color: rgba(255, 255, 255, 0.879);
+    display: block;
+    font-size: larger;
+    padding: 6px;
+    border-radius: 9px;
+}
+.flow-date-row.weekend {
+    background-color: #ffffffab;
+}
+.flow-date-row.today .flow-date-cell > div {
+    background-color: #0091ffd4;
+    color: white;
+    font-weight: 700;
+}
+.flow-date-header {
+    font-weight: 700;
 }

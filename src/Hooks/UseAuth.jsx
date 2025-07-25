@@ -12,7 +12,7 @@ export const useAuth = () => {
             setUser(JSON.parse(userData));
             
             // Проверяем срок действия куки
-            if (!Cookies.get('jwt_token')) {
+            if (!Cookies.get('jwt')) {
                 logout();
             }
         }
@@ -20,7 +20,7 @@ export const useAuth = () => {
 
     const login = (responseData) => {
         // 1. Сохраняем токен в куки (expires в секундах)
-        Cookies.set('jwt_token', responseData.token_metadata.token, {
+        Cookies.set('jwt', responseData.token_metadata.token, {
             expires: new Date(responseData.token_metadata.expires_timestamp),
             secure: true,
             sameSite: 'Strict'
