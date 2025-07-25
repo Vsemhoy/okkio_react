@@ -1,6 +1,7 @@
 .eventor-flow-daycard {
     /* background-color: white; */
-    max-width: 34em;
+    max-width: 45em;
+    min-width: 22em;
 }
 
 

@@ -75,7 +75,7 @@ const FlowDateRow = (props) => {
                         >
                             <div className='flow-date-cell'>
                                 <div>
-                                    {GetMonthName(date.month() + 1, 'EN')} {date.format('DD')} {GetDayName(date.day(), 'en', true)}
+                                    {GetMonthName(date.month() + 1, 'EN', true)} {date.format('DD')} {GetDayName(date.day(), 'en', true)}
 
                                 </div>
                             </div>

@@ -23,7 +23,7 @@
     }
     .adaptive-layout {
     padding: 0px;
-}
+    }
 }
 
 .flow-date-row > div {
@@ -35,13 +35,33 @@
 }
 
 .ev-flow-row-event-stack {
-        display: grid;
-    grid-template-columns: auto auto auto;
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+        justify-content: start;
 }
 .affix-date {
     background-color: burlywood;
 }
 
+
+@media screen and (max-width: 1568px) {
+    .ev-flow-row-event-stack {
+        grid-template-columns: auto auto auto;
+    }
+}
+
+
+@media screen and (max-width: 1168px) {
+    .ev-flow-row-event-stack {
+        grid-template-columns: auto auto;
+    }
+}
+
+@media screen and (max-width: 668px) {
+    .ev-flow-row-event-stack {
+        grid-template-columns: auto;
+    }
+}
 
 
 .flow-date-cell {

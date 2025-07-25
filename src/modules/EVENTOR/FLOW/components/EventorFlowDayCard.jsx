@@ -171,6 +171,7 @@ const EventorFlowDayCard = (props) => {
         //   xl: '50%',
         //   xxl: '40%',
         // }}
+        width={content && content.length > 1500 ? 900 : 650}
         title={<div className='mi-pa-6' style={{borderBottom: '1px solid #c9c9c9'}}>{name}</div>}
         onCancel={()=>{setOpenViewer(false)}}
         footer={<div>
