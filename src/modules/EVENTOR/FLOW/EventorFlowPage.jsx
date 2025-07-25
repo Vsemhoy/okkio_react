@@ -63,8 +63,10 @@ const EventorFlowPage = ({user_data, user_state}) => {
             
             
             for (let i = 0; i < prevEvents.length; i++) {
-                removeEvent(prevEvents[i].id);
-            }
+                if (!prevEvents[i].syncStatus && !prevEvents[i].id.contains('temp_')){
+                    removeEvent(prevEvents[i].id);
+                };
+            };
 
             const data = response.data.content;
             for (let i = 0; i < data.length; i++) {
