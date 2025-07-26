@@ -16,3 +16,20 @@
 .mdxeditor-popup-container {
     z-index: 9999 !important;
 }
+
+.remark-toolbar-extra-button {
+    font-size: 20px;
+    float: right;
+    cursor: pointer;
+}
+.remark-toolbar-extra-button * {
+    transition: all 0.5s;
+    
+}
+
+.remark-toolbar-extra-button:hover  * {
+    color: #0091ffd4;
+}
+.remark-toolbar-extra-button:active  * {
+    color: #003c6ad4;
+}

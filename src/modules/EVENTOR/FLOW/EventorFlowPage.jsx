@@ -30,7 +30,7 @@ const EventorFlowPage = ({user_data, user_state}) => {
 
 
     const [dateArray, setDateArray] = useState([]);
-    const [calendarDirection, setCalendarDirection] = useState(true);
+    const [calendarDirection, setCalendarDirection] = useState( Cookies.get('ev_calendar_direction') !== undefined ? Cookies.get('ev_calendar_direction') : true);
 
     const [preHidden, setPreHidden] = useState(false);
 
@@ -39,10 +39,18 @@ const EventorFlowPage = ({user_data, user_state}) => {
     const [editedEvent, setEditedEvent] = useState(null);
 
     useEffect(() => {
+        console.log('caldir', Cookies.get('ev_calendar_direction'))
+        setCalendarDirection(Cookies.get('ev_calendar_direction') !== undefined ? Cookies.get('ev_calendar_direction') : true);
         loadEventsAction(startMonth, endMonth, null);
     }, []);
 
 
+    useEffect(() => {
+        console.log('first', calendarDirection, Cookies.get('ev_calendar_direction'))
+        
+      Cookies.set('ev_calendar_direction', calendarDirection);
+      
+    }, [calendarDirection]);
 
     const loadEventsAction = async (start, end, section) => {
         let loadedFromServer = false;
@@ -58,12 +66,13 @@ const EventorFlowPage = ({user_data, user_state}) => {
                     'Authorization': 'Bearer ' + Cookies.get('jwt')
                 }
             });
-            const eventsToRemoveFromCache = [];
+            
             let prevEvents = getEvents(start, end, section);
             
-            
+            console.log('prevEvents', prevEvents);
             for (let i = 0; i < prevEvents.length; i++) {
-                if (!prevEvents[i].syncStatus && !prevEvents[i].id.contains('temp_')){
+                console.log(prevEvents[i]);
+                if (!prevEvents[i].syncStatus && !prevEvents[i].id.includes('temp_')){
                     removeEvent(prevEvents[i].id);
                 };
             };
@@ -74,8 +83,8 @@ const EventorFlowPage = ({user_data, user_state}) => {
             }
             setBaseEvents(data);
             loadedFromServer = true;
-        } catch {
-
+        } catch (error) {
+            console.error('Sync failed:', error);
         }
 
         if (!loadedFromServer){
@@ -225,7 +234,7 @@ const EventorFlowPage = ({user_data, user_state}) => {
                     
                     <div className={'mi-pa-12'}>
                         <div className={"mi-flex-space"}>
-                            <div>A</div>
+                            <div>{calendarDirection ? '' : ''}</div>
                             <div className={'mi-flex  mi-grid-gap-6'}>
                                 <Button
                                 size='small'
@@ -257,10 +266,14 @@ const EventorFlowPage = ({user_data, user_state}) => {
                                     onClick={()=>{handleExpandMonth(1)}}
                                 />
                             </div>
-                            <div><Switch checkedChildren="PAST" unCheckedChildren="FUTURE" defaultChecked 
-                                checked={calendarDirection}
-                                onChange={(ev)=>{setCalendarDirection(ev)}}
-                            /></div>
+                            <div>
+                            <Switch 
+                                checkedChildren="PAST" 
+                                unCheckedChildren="FUTURE" 
+                                checked={calendarDirection} // булево, true/false
+                                onChange={(checked) => setCalendarDirection(checked)} // выставляем состояние
+                            />
+                            </div>
                         </div>
                     </div>
                     <div className={"adaptive-layout"}>
@@ -330,10 +343,14 @@ const EventorFlowPage = ({user_data, user_state}) => {
                                     onClick={()=>{handleExpandMonth(1)}}
                                 />
                             </div>
-                            <div><Switch checkedChildren="PAST" unCheckedChildren="FUTURE" defaultChecked 
-                                checked={calendarDirection}
-                                onChange={(ev)=>{setCalendarDirection(ev)}}
-                            /></div>
+                            <div>
+                            <Switch 
+                                checkedChildren="PAST" 
+                                unCheckedChildren="FUTURE" 
+                                checked={calendarDirection} // булево, true/false
+                                onChange={(checked) => setCalendarDirection(checked)} // выставляем состояние
+                            />
+                            </div>
                         </div>
                     </div>
                     <div className={'height-filler'}>

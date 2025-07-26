@@ -314,7 +314,7 @@ const EventEditorCom = (props) => {
     // }
 
 
-  const handleSaveData = async () => {
+  const handleSaveData = async (close = false) => {
     console.log('🔥 handleSaveData вызван', Date.now());
     if (blockAction) return;
     setBlockAction(true);
@@ -379,8 +379,11 @@ const EventEditorCom = (props) => {
         setBlockAction(false);
         if (props.on_change) {
           props.on_change([tempId]);
+          if (close === true){
+            props.onCancel();
+          }
         }
-      }, 1500);
+      }, 1300);
     }
   };
 
@@ -400,7 +403,7 @@ const EventEditorCom = (props) => {
         debounceTimeoutRef.current = setTimeout(() => {
         setFormContent(newMarkdown);
 
-        }, 300);
+        }, 1200);
     }, []);
 
 
@@ -723,7 +726,7 @@ const extractCodeLanguages = (markdown) => {
                 <Button
                 icon={<SaveFilled />}
                 type={'primary'}
-                onClick={handleSaveData}
+                onClick={()=>{handleSaveData(true)}}
                 disabled={blockAction}
                 >Save</Button>
             </div>
@@ -816,7 +819,10 @@ const extractCodeLanguages = (markdown) => {
                         <InsertTable />                  
                         <ListsToggle />                  
                         <InsertAdmonition />             
-                        <InsertCodeBlock />              
+                        <InsertCodeBlock />   
+                        <div className='remark-toolbar-extra-button'
+                          onClick={handleSaveData}
+                        ><SaveOutlined /></div>           
                         </>
                     ),
                     }),
