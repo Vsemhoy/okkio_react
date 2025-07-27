@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import DevSideNavMt from '../../../components/MimiTemplate/components/DEVSIDENAV/DevSidenavMt';
 import { Button, DatePicker, Input, Modal, Switch } from 'antd';
-import { DoubleLeftOutlined, DoubleRightOutlined, LeftOutlined, LoadingOutlined, RightOutlined } from '@ant-design/icons';
+import { DoubleLeftOutlined, DoubleRightOutlined, DownSquareOutlined, LeftOutlined, LoadingOutlined, RightOutlined, UpSquareOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import FlowDateRow from './components/FlowDateRow';
 import FlowDayHeadRow from './components/FlowDayHeadRow';
@@ -267,12 +267,20 @@ const EventorFlowPage = ({user_data, user_state}) => {
                                 />
                             </div>
                             <div>
-                            <Switch 
-                                checkedChildren="PAST" 
-                                unCheckedChildren="FUTURE" 
-                                checked={calendarDirection} // булево, true/false
-                                onChange={(checked) => setCalendarDirection(checked)} // выставляем состояние
-                            />
+
+                            {calendarDirection ? (
+                                <div 
+                                onClick={()=>{setCalendarDirection(false)}}
+                                className={'evt-calendar-direction-switch'}
+                                    title='From past to future'
+                                ><DownSquareOutlined /></div>
+                            ):(
+                               <div
+                                onClick={()=>{setCalendarDirection(true)}}
+                                className={'evt-calendar-direction-switch'}
+                                    title='From future to past'
+                                    ><UpSquareOutlined /></div>
+                            )}
                             </div>
                         </div>
                     </div>
@@ -344,12 +352,20 @@ const EventorFlowPage = ({user_data, user_state}) => {
                                 />
                             </div>
                             <div>
-                            <Switch 
-                                checkedChildren="PAST" 
-                                unCheckedChildren="FUTURE" 
-                                checked={calendarDirection} // булево, true/false
-                                onChange={(checked) => setCalendarDirection(checked)} // выставляем состояние
-                            />
+
+                            {calendarDirection ? (
+                                <div 
+                                onClick={()=>{setCalendarDirection(false)}}
+                                className={'evt-calendar-direction-switch'}
+                                    title='From past to future'
+                                ><DownSquareOutlined /></div>
+                            ):(
+                               <div
+                                onClick={()=>{setCalendarDirection(true)}}
+                                className={'evt-calendar-direction-switch'}
+                                    title='From future to past'
+                                    ><UpSquareOutlined /></div>
+                            )}
                             </div>
                         </div>
                     </div>

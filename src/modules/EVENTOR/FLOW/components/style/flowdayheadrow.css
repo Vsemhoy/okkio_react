@@ -18,3 +18,17 @@
     /* background-color: white; */
 
 }
+
+.evt-calendar-direction-switch {
+    /* background-color: white; */
+    padding: 3px;
+    cursor: pointer;
+}
+.evt-calendar-direction-switch  * {
+    font-size: x-large;
+    color: white;
+
+}
+.evt-calendar-direction-switch:hover * {
+    background-color: #0091ffd4;;
+}

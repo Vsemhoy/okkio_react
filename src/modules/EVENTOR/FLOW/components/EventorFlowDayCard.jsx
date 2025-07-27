@@ -180,7 +180,7 @@ const EventorFlowDayCard = (props) => {
             >Close</Button>
         </div>}
       >
-        <div className='mi-pa-9'>
+        <div className='mi-pa-9 remarkrenderer'>
            <ReactMarkdown 
             remarkPlugins={[remarkGfm]}
             components={{

@@ -28,3 +28,13 @@ div[class*="react-syntax-highlighter"] span.line-number {
 div[class*="react-syntax-highlighter"] span.line-number:first-of-type {
   margin-top: 0;
 }
+
+.prose > *:last-child {
+  min-height: 120px;
+}
+
+
+.remarkrenderer table {
+  overflow: auto;
+  display: block;
+}
