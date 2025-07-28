@@ -5,106 +5,114 @@ import { Affix } from 'antd';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { setCurrentProject } from '../../../../storage/uiSlice';
+import { useLayoutStorage } from '../../../../storage/localstorage/LayoutStorage';
+
 
 const DevSideNavMt = (props) => {
-    const [menuOpened, setMenuOpened] = useState(false);
-    const [openedBlock, setOpenedBlock] = useState(null);
+  const {
+    getOpenSidebar,
+    setOpenSidebar,
+    storage // Добавляем storage для наблюдения за изменениями
+  } = useLayoutStorage();
 
-     const [isHoveringBlock, setIsHoveringBlock] = useState(false);
-    const menuRef = useRef(null);
-    const blockRef = useRef(null);
-    const activeTimer = useRef(null);
+  const [menuSlided, setMenuSlided] = useState(getOpenSidebar());
+  const [menuOpened, setMenuOpened] = useState(false);
+  const [openedBlock, setOpenedBlock] = useState(null);
+  const [isHoveringBlock, setIsHoveringBlock] = useState(false);
+  const menuRef = useRef(null);
+  const blockRef = useRef(null);
+  const activeTimer = useRef(null);
 
-        // Очищаем таймер при размонтировании
-    useEffect(() => {
-        return () => {
-            if (activeTimer.current) clearTimeout(activeTimer.current);
-        };
-    }, []);
-
-    const menuItems = [
-        {
-            key: '5342',
-            label: 'Проекты',
-            block: 'projects',
-            icon: <Html5Filled />
-        },
-        {
-            key: '53442',
-            label: 'Ресурсы',
-            block: 'resources',
-            icon: <DropboxOutlined />
-        },
-        {
-            key: '5342442',
-            label: 'Документы',
-            block: 'docs',
-            icon: <FileWordFilled />
-        }
-    ]
-
-    const handleMouseEnter = () => {
-        setTimeout(() => {
-            setMenuOpened(true);
-        }, 200);
-    }
-
-    const handleMouseLeave = ()=>{
-        setTimeout(() => {
-            setMenuOpened(false);
-        }, 800);
-    }
-
-    // const handleChangeActiveBlock = (targetBlock)=>{
-    //     setTimeout(() => {
-    //         setOpenedBlock(targetBlock);
-    //     }, 300);
-    // }
-
-    const handleChangeActiveBlock = (targetBlock) => {
-        if (activeTimer.current) clearTimeout(activeTimer.current);
-        
-        // Если мышь уже на блоке, не меняем активный блок
-        if (!isHoveringBlock) {
-            activeTimer.current = setTimeout(() => {
-                setOpenedBlock(targetBlock);
-                setMenuOpened(true);
-            }, 150); // Уменьшенная задержка для более плавного перехода
-        }
+  useEffect(() => {
+    return () => {
+      if (activeTimer.current) clearTimeout(activeTimer.current);
     };
+  }, []);
+
+  // Следим за изменениями в хранилище
+  useEffect(() => {
+    setMenuSlided(getOpenSidebar());
+  }, [storage.openSidebar]); // Реагируем на изменения openSidebar
+
+  const menuItems = [
+    {
+      key: '5342',
+      label: 'Проекты',
+      block: 'projects',
+      icon: <Html5Filled />
+    },
+    {
+      key: '53442',
+      label: 'Ресурсы',
+      block: 'resources',
+      icon: <DropboxOutlined />
+    },
+    {
+      key: '5342442',
+      label: 'Документы',
+      block: 'docs',
+      icon: <FileWordFilled />
+    }
+  ];
+
+  const handleMouseEnter = () => {
+    setTimeout(() => {
+      setMenuOpened(true);
+    }, 200);
+  };
+
+  const handleMouseLeave = () => {
+    setTimeout(() => {
+      setMenuOpened(false);
+    }, 800);
+  };
+
+  const handleChangeActiveBlock = (targetBlock) => {
+    if (activeTimer.current) clearTimeout(activeTimer.current);
+    
+    if (!isHoveringBlock) {
+      activeTimer.current = setTimeout(() => {
+        setOpenedBlock(targetBlock);
+        setMenuOpened(true);
+      }, 150);
+    }
+  };
 
   return (
     <Affix offsetTop={40}>
-    <div className={'mi-devsidebar'}>
-        <div className={`mi-devside-menu ${menuOpened ? 'mi-devside-menu-wide' : 'mi-devside-menu-narrow'}`}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+      <div className={`mi-devsidebar ${menuSlided ? "mi-devsidebar-opened" : "mi-devsidebar-closed"}`}>
+        <div 
+          className={`mi-devside-menu ${menuOpened ? 'mi-devside-menu-wide' : 'mi-devside-menu-narrow'}`}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
         >
-            <div className={'mi-devmenu-columns'}>
-                <div>
-                    {menuItems.map((mit)=>(
-                        <div
-                            onMouseEnter={()=>{handleChangeActiveBlock(mit.block)}}
-                            className={'mi-ds-menu-item'}
-                        >{mit.icon}</div>
-                    ))}
-                </div>
+          <div className={'mi-devmenu-columns'}>
+            <div>
+              {menuItems.map((mit) => (
                 <div
-                    className={'mi-ds-menu-block'}
-                    onMouseEnter={()=>{handleChangeActiveBlock(openedBlock)}}
+                  key={mit.key}
+                  onMouseEnter={() => {handleChangeActiveBlock(mit.block)}}
+                  className={'mi-ds-menu-item'}
                 >
-                    <div className='mi-pa-12 mi-flex-space'>
-                        <span>{menuItems.find((item)=>item.block === openedBlock)?.label}</span><span><SettingFilled /></span>
-                    </div>
-                    {openedBlock === 'projects' && (
-                        <ProjectBlock 
-
-                        ></ProjectBlock>
-                    )}
+                  {mit.icon}
                 </div>
+              ))}
             </div>
+            <div
+              className={'mi-ds-menu-block'}
+              onMouseEnter={() => {handleChangeActiveBlock(openedBlock)}}
+            >
+              <div className='mi-pa-12 mi-flex-space'>
+                <span>{menuItems.find((item) => item.block === openedBlock)?.label}</span>
+                <span><SettingFilled /></span>
+              </div>
+              {openedBlock === 'projects' && (
+                <ProjectBlock />
+              )}
+            </div>
+          </div>
         </div>
-    </div>
+      </div>
     </Affix>
   );
 };

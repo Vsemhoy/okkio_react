@@ -3,12 +3,14 @@ import React, { useContext, useEffect, useState } from 'react';
 import './style/menubox.css';
 import { Affix, Button, Dropdown } from 'antd';
 
-import { AndroidOutlined, AuditOutlined, BarsOutlined, CloseOutlined, DropboxOutlined, FundProjectionScreenOutlined, HomeOutlined, Html5Outlined, LinuxOutlined, PaperClipOutlined, PartitionOutlined, ProjectOutlined, QuestionOutlined, RocketOutlined, UserOutlined, WechatWorkOutlined, YahooOutlined } from '@ant-design/icons';
+import { AndroidOutlined, AuditOutlined, BarsOutlined, CloseOutlined, DropboxOutlined, FundProjectionScreenOutlined, HomeOutlined, Html5Outlined, LinuxOutlined, MenuFoldOutlined, MenuUnfoldOutlined, PaperClipOutlined, PartitionOutlined, ProjectOutlined, QuestionOutlined, RocketOutlined, UserOutlined, WechatWorkOutlined, YahooOutlined } from '@ant-design/icons';
 import { Link, NavLink } from 'react-router-dom';
 import { USER_STATE } from '../../../../config/config';
 import AuthModal from '../../../Auth/AuthModal';
 import { logout, useAuth } from '../../../../Hooks/UseAuth';
 import Cookies from "js-cookie";
+
+import { useLayoutStorage } from '../../../../storage/localstorage/LayoutStorage';
 
 
 
@@ -21,6 +23,12 @@ const MenuBox = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const buttSize = 'large';
   const [userData, setUserData] = useState(null);
+
+  const {
+    getOpenSidebar,
+    setOpenSidebar,
+  } = useLayoutStorage();
+
 
   // Проверяем авторизацию при загрузке
   React.useEffect(() => {
@@ -107,16 +115,29 @@ const developerItems = [
     <div className={'mi-container mi-bg-base mi-block-menu mi-br-3'} >
       
       <div className={'mi-flex'}>
-       <NavLink to={'/home'}
-       className={({ isActive }) => isActive ? 'mi-active' : ''}
-       >
+       
+      
           <div className={''}>
-          <Button type="text" size={buttSize}>
-            <CloseOutlined />
+            {getOpenSidebar() ? (
+                  <Button 
+                    type="text" 
+                    size={buttSize}
+                    onClick={() => setOpenSidebar(false)}
+                  >
+                    <CloseOutlined />
+                  </Button>
+                ) : (
+                  <Button 
+                    type="text" 
+                    size={buttSize}
+                    onClick={() => setOpenSidebar(true)}
+                  >
+                    <MenuUnfoldOutlined />
+                  </Button>
+                )}
 
-          </Button>
           </div>
-        </NavLink>
+        
       </div>
       <div className={'mi-flex'}>
 

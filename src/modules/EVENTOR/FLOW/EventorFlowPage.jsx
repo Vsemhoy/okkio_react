@@ -8,6 +8,7 @@ import FlowDayHeadRow from './components/FlowDayHeadRow';
 import EventEditorCom from '../EVEDITOR/EventEditorCom';
 import { useEventorStorage } from '../../../storage/localstorage/EventorStaorage';
 import { PROD_AXIOS_INSTANCE } from '../../../API/API';
+import './components/style/eventor.css';
 
 import Cookies from "js-cookie";
 
@@ -223,12 +224,12 @@ const EventorFlowPage = ({user_data, user_state}) => {
 
 
   return (
-     <div className={`mi-page-layout ${user_state?.role == 'developer' ? 'mi-layout-dev' : 'mi-layout-client'}`}
+     <div className={`mi-page-layout mi-layout-devsider`}
         
         >
-        {user_state?.role == 'developer' && (
+        
             <DevSideNavMt />
-        )}
+        
         <div className={'mi-layout-body'}><div className={'mi-page-wrapper'}>
             <div className={"mi-ska-mw-1900"}>
                     
