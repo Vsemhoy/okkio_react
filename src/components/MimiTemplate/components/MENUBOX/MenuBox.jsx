@@ -11,6 +11,7 @@ import { logout, useAuth } from '../../../../Hooks/UseAuth';
 import Cookies from "js-cookie";
 
 import { useLayoutStorage } from '../../../../storage/localstorage/LayoutStorage';
+import dayjs from 'dayjs';
 
 
 
@@ -27,8 +28,12 @@ const MenuBox = (props) => {
   const {
     getOpenSidebar,
     setOpenSidebar,
+    storage
   } = useLayoutStorage();
 
+  useEffect(() => {
+    console.log('ALLO', 78654)
+  }, [getOpenSidebar()]);
 
   // Проверяем авторизацию при загрузке
   React.useEffect(() => {
@@ -78,6 +83,13 @@ const clientItems = [
     icon: <WechatWorkOutlined />,
   },
 ];
+
+useEffect(() => {
+  if (props.layout_change_callback){
+    props.layout_change_callback(dayjs().unix());
+
+  }
+}, [storage]);
 
 const developerItems = [
   {

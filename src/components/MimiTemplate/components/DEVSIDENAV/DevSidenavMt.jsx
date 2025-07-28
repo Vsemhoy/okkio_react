@@ -12,10 +12,10 @@ const DevSideNavMt = (props) => {
   const {
     getOpenSidebar,
     setOpenSidebar,
-    storage // Добавляем storage для наблюдения за изменениями
+    storage
   } = useLayoutStorage();
 
-  const [menuSlided, setMenuSlided] = useState(getOpenSidebar());
+  const [menuSlided, setMenuSlided] = useState(false);
   const [menuOpened, setMenuOpened] = useState(false);
   const [openedBlock, setOpenedBlock] = useState(null);
   const [isHoveringBlock, setIsHoveringBlock] = useState(false);
@@ -32,7 +32,7 @@ const DevSideNavMt = (props) => {
   // Следим за изменениями в хранилище
   useEffect(() => {
     setMenuSlided(getOpenSidebar());
-  }, [storage.openSidebar]); // Реагируем на изменения openSidebar
+  }, [props.on_callback]); // Реагируем на изменения openSidebar
 
   const menuItems = [
     {
@@ -64,6 +64,7 @@ const DevSideNavMt = (props) => {
   const handleMouseLeave = () => {
     setTimeout(() => {
       setMenuOpened(false);
+
     }, 800);
   };
 

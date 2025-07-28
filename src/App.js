@@ -22,6 +22,9 @@ import KanbanPage from './modules/TASKER_MT/KANBAN_MT/KanbanPage';
 import ProjectPageMt from './modules/PROJECTS_MT/ProjectsPageMt';
 import EventorFlowPage from './modules/EVENTOR/FLOW/EventorFlowPage';
 import { useAuthMonitor } from './Hooks/UseAuthMonitor';
+import dayjs from 'dayjs';
+
+
 
 
 function App() {
@@ -31,6 +34,8 @@ function App() {
   // const [userProfile, setUserProfile] = useState(!PRODMODE ? DS_USER : []);
 
   const [pageLoaded, setPageLoaded] = useState(true);
+
+  const [layoutCallback, setLayoutCallback] = useState(0);
 
 
 
@@ -89,7 +94,7 @@ function App() {
       <BrowserRouter basename={BASE_NAME}>
         <div id='top'>
           <MenuBox
-            
+            layout_change_callback={setLayoutCallback}
             user_data={userProfile}
             on_auth={handleAuth}
           />
@@ -98,7 +103,7 @@ function App() {
             <Route path={'/'} element={<MainFlowPage user_data={userProfile}/>} />
             {/* <Route path={BASE_ROUTE + '/'} element={<MainFlowPage user_data={userProfile}/>}  /> */}
 
-            <Route path={'/dev/tree'} element={<TreeTaskPage userdata={userProfile}/>} />
+            <Route path={'/dev/tree'} element={<TreeTaskPage userdata={userProfile} on_callback={layoutCallback}/>} />
             {/* <Route path={BASE_ROUTE + '/dev/tree'} element={<TreeTaskPage userdata={userProfile}/>}/> */}
 
             <Route path={'/dev/kanban'} element={<KanbanPage userdata={userProfile}/>} />
@@ -107,7 +112,7 @@ function App() {
             <Route path={'/dev/projects'} element={<ProjectPageMt userdata={userProfile}/>} />
             {/* <Route path={BASE_ROUTE + '/dev/projects'} element={<ProjectPageMt userdata={userProfile}/>}/> */}
 
-            <Route path={'/eventor'} element={<EventorFlowPage userdata={userProfile}/>} />
+            <Route path={'/eventor'} element={<EventorFlowPage userdata={userProfile} on_callback={layoutCallback}/>} />
             {/* <Route path={BASE_ROUTE + '/eventor'} element={<EventorFlowPage userdata={userProfile}/>}/> */}
 
             {/* <Route path={'/'} element={<MainPageUt userdata={userProfile}/>} />

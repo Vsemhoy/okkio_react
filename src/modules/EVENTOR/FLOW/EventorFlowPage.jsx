@@ -12,13 +12,19 @@ import './components/style/eventor.css';
 
 import Cookies from "js-cookie";
 
-const EventorFlowPage = ({user_data, user_state}) => {
+const EventorFlowPage = ({user_data, user_state, on_callback}) => {
 
   const { 
     events,
     addEvent,
     getEvents,
-    removeEvent
+    removeEvent,
+    
+    addSection,
+    getSection,
+    getSections,
+    removeSection,
+    updateSection,
   } = useEventorStorage();
 
     const [startMonth, setstartMonth] = useState(dayjs().startOf('month'));
@@ -52,6 +58,48 @@ const EventorFlowPage = ({user_data, user_state}) => {
       Cookies.set('ev_calendar_direction', calendarDirection);
       
     }, [calendarDirection]);
+
+
+    const loadSectionsAction = async () => {
+        let loadedFromServer = false;
+            try {
+            const response = await PROD_AXIOS_INSTANCE.post('/eventor/getmysections', 
+            {
+
+            }, {
+                headers: {
+                    'Authorization': 'Bearer ' + Cookies.get('jwt')
+                }
+            });
+            
+            let prevEvents = getSections();
+            
+            console.log('prevEvents', prevEvents);
+            for (let i = 0; i < prevEvents.length; i++) {
+                console.log(prevEvents[i]);
+                if (!prevEvents[i].syncStatus && !prevEvents[i].id.includes('temp_')){
+                    removeEvent(prevEvents[i].id);
+                };
+            };
+
+            const data = response.data.content;
+            for (let i = 0; i < data.length; i++) {
+                addEvent(data[i].id, data[i]);
+            }
+            setBaseEvents(data);
+            loadedFromServer = true;
+        } catch (error) {
+            console.error('Sync failed:', error);
+        }
+
+        if (!loadedFromServer){
+            setBaseEvents(getEvents());
+        }
+        setTimeout(() => {
+            setPreHidden(false);
+        }, 700);
+
+    }
 
     const loadEventsAction = async (start, end, section) => {
         let loadedFromServer = false;
@@ -223,12 +271,19 @@ const EventorFlowPage = ({user_data, user_state}) => {
     }
 
 
+
+
   return (
      <div className={`mi-page-layout mi-layout-devsider`}
         
         >
         
-            <DevSideNavMt />
+            <DevSideNavMt 
+                title="Sections" 
+                selected=""
+                items=""
+                on_callback={on_callback}
+            />
         
         <div className={'mi-layout-body'}><div className={'mi-page-wrapper'}>
             <div className={"mi-ska-mw-1900"}>

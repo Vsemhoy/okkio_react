@@ -16,10 +16,32 @@
 .mi-devside-menu-narrow {
     width: 44px;
 }
+.mi-devsidebar-opened .mi-devside-menu-narrow {
+    width: 320px;
+}
 
 .mi-devside-menu-wide {
     width: 320px;
 }
+
+
+.mi-layout-devsider {
+    display: grid;
+    grid-template-columns: 45px auto;
+}
+@media screen and (max-width: 668px) {
+    .mi-devsidebar-closed {
+        display: none;
+    }
+        .mi-devsidebar-opened {
+        display: block;
+    }
+    .mi-layout-devsider {
+        display: grid;
+        grid-template-columns: 0px auto;
+    }
+}
+
 
 .mi-devmenu-columns {
     display: grid;

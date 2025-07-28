@@ -48,17 +48,33 @@ export const useLayoutStorage = () => {
   }, [storage]);
 
   // 🔹 Геттеры
-  const getOpenSidebar = () => storage.openSidebar ?? false;
+  const getOpenSidebar = () => {
+    const saved = localStorage.getItem('layout');
+    if (saved ){
+        return JSON.parse(saved)?.openSidebar;
+    } else {
+        return false;
+    }
+  };
   const getEventorFlowDirection = () => storage.eventorFlowDirection ?? 0;
 
   // 🔹 Сеттеры
   const setOpenSidebar = (value) => {
+    const newValue = Boolean(value);
     setStorage(prev => {
-      const newState = { ...prev, openSidebar: Boolean(value) };
-      localStorage.setItem('layout', JSON.stringify(newState));
-      return newState;
+        // 🔥 Принудительно создаём новый объект, даже если значение то же
+        const newState = { ...prev, openSidebar: newValue };
+        localStorage.setItem('layout', JSON.stringify(newState));
+        return newState;
     });
-  };
+};
+//   const setOpenSidebar = (value) => {
+//     setStorage(prev => {
+//       const newState = { ...prev, openSidebar: Boolean(value) };
+//       localStorage.setItem('layout', JSON.stringify(newState));
+//       return newState;
+//     });
+//   };
 
   const setEventorFlowDirection = (value) => {
     // Ограничиваем значение (например, от 0 до 2)
