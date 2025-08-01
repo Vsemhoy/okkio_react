@@ -2,7 +2,8 @@
     display: grid;
     grid-template-columns: minmax(min-content, min-content) auto minmax(min-content, min-content);
     /* border: 1px solid var(--row-divider-color); */
-
+    z-index: 99;
+    position: relative;
     box-shadow: 0px 16px 20px -17px 
 }
 

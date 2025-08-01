@@ -24,7 +24,7 @@ const  FlowDayHeadRow = (props) => {
                 {GetMonthName(date.month() + 1, 'en')} {date.format('YYYY')}
             </div>
             <div>
-                
+                {props.container}
             </div>
         </div>
         </div>

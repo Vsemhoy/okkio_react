@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './devsidenavmt.css';
-import { DropboxOutlined, FileWordFilled, Html5Filled, SettingFilled } from '@ant-design/icons';
-import { Affix } from 'antd';
+import { CloseOutlined, DropboxOutlined, FileWordFilled, Html5Filled, MenuUnfoldOutlined, SettingFilled } from '@ant-design/icons';
+import { Affix, Button } from 'antd';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { setCurrentProject } from '../../../../storage/uiSlice';
 import { useLayoutStorage } from '../../../../storage/localstorage/LayoutStorage';
+import dayjs from 'dayjs';
 
 
 const DevSideNavMt = (props) => {
@@ -19,9 +20,20 @@ const DevSideNavMt = (props) => {
   const [menuOpened, setMenuOpened] = useState(false);
   const [openedBlock, setOpenedBlock] = useState(null);
   const [isHoveringBlock, setIsHoveringBlock] = useState(false);
+  const [activeItem, setActiveItem] = useState(props.active_item);
+  const [sideItems, setSideItems] = useState(props.items);
   const menuRef = useRef(null);
   const blockRef = useRef(null);
   const activeTimer = useRef(null);
+
+
+  useEffect(() => {
+    setSideItems(props.items);
+  }, [props.items]);
+
+  useEffect(() => {
+    setActiveItem(props.active_item);
+  }, [props.active_item]);
 
   useEffect(() => {
     return () => {
@@ -79,9 +91,52 @@ const DevSideNavMt = (props) => {
     }
   };
 
+  useEffect(() => {
+    if (props.on_change_item){
+      props.on_change_item(activeItem);
+    }
+  }, [activeItem]);
+
+
+  useEffect(() => {
+    if (props.layout_change_callback){
+      props.layout_change_callback(dayjs().unix());
+  
+    }
+  }, [storage]);
+
   return (
+    <div>
+      
+
+      <div className={`mi-devsider-topper  ${getOpenSidebar() ? "mds-opened-topper" : "mds-closed-topper"}`}>
+          {getOpenSidebar() ? (
+            <Button 
+              type="text" 
+            
+              onClick={() => setOpenSidebar(false)}
+            >
+              <CloseOutlined />
+            </Button>
+          ) : (
+            <Button 
+              type="text" 
+        
+              onClick={() => setOpenSidebar(true)}
+            >
+              <MenuUnfoldOutlined />
+            </Button>
+          )}
+        </div>
+        <div 
+        onClick={() => setOpenSidebar(true)}
+        className={`mi-devsider-rail-topper  ${getOpenSidebar() ? "mds-opened-rail-topper" : "mds-closed-rail-topper"}`}>
+
+        </div>
+      
     <Affix offsetTop={40}>
       <div className={`mi-devsidebar ${menuSlided ? "mi-devsidebar-opened" : "mi-devsidebar-closed"}`}>
+
         <div 
           className={`mi-devside-menu ${menuOpened ? 'mi-devside-menu-wide' : 'mi-devside-menu-narrow'}`}
           onMouseEnter={handleMouseEnter}
@@ -93,7 +148,7 @@ const DevSideNavMt = (props) => {
                 <div
                   key={mit.key}
                   onMouseEnter={() => {handleChangeActiveBlock(mit.block)}}
-                  className={'mi-ds-menu-item'}
+                  className={`mi-ds-menu-item `}
                 >
                   {mit.icon}
                 </div>
@@ -104,17 +159,46 @@ const DevSideNavMt = (props) => {
               onMouseEnter={() => {handleChangeActiveBlock(openedBlock)}}
             >
               <div className='mi-pa-12 mi-flex-space'>
-                <span>{menuItems.find((item) => item.block === openedBlock)?.label}</span>
+                <span>{props.title}</span>
                 <span><SettingFilled /></span>
               </div>
-              {openedBlock === 'projects' && (
+              {/* {openedBlock === 'projects' && (
                 <ProjectBlock />
-              )}
+              )} */}
+
+
+                <div>
+                  <div className={'mi-ds-menu-proj-stack'}>
+                      <div className={'mi-ds-menu-proj-stack-item'}>
+                          {/* {activeItem && (
+                              <div className={'mi-ds-menu-proj-card-item active'}>
+                                  <div className={'mi-ds-menu-proj-card-item-name'}>
+                                  {activeItem.name}
+                                  </div>
+                              </div>
+                          )} */}
+                          {sideItems.map((sideItem, i)=>(
+                              <div 
+                                key={sideItem.key}
+                              className={`mi-ds-menu-proj-card-item ${sideItem.id === activeItem ? 'active' : ''}`}
+                                  onClick={()=>{setActiveItem(sideItem.id)}}
+                                  >
+                                  <div className={'mi-ds-menu-proj-card-item-name'}>
+                                  {sideItem.label}
+                                  </div>
+                              </div>
+                          ))}
+                      </div>
+                  </div>
+              </div>
+
+
             </div>
           </div>
         </div>
       </div>
     </Affix>
+    </div>
   );
 };
 

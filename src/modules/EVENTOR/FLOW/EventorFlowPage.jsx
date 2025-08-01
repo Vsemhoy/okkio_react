@@ -12,7 +12,7 @@ import './components/style/eventor.css';
 
 import Cookies from "js-cookie";
 
-const EventorFlowPage = ({user_data, user_state, on_callback}) => {
+const EventorFlowPage = ({user_data, user_state, on_callback, layout_change_callback}) => {
 
   const { 
     events,
@@ -37,27 +37,29 @@ const EventorFlowPage = ({user_data, user_state, on_callback}) => {
 
 
     const [dateArray, setDateArray] = useState([]);
-    const [calendarDirection, setCalendarDirection] = useState( Cookies.get('ev_calendar_direction') !== undefined ? Cookies.get('ev_calendar_direction') : true);
+    const [calendarDirection, setCalendarDirection] = useState(Cookies.get('ev_calendar_direction') !== undefined ? Cookies.get('ev_calendar_direction') : 'DESC');
 
     const [preHidden, setPreHidden] = useState(false);
 
     const [baseEvents, setBaseEvents] = useState([]);
+    const [baseSections, setBaseSections] = useState([]);
+
+    const [sidenavSections, setSidenavSections] = useState([]);
+
     const [localEvents, setLocalEvents] = useState([]);
     const [editedEvent, setEditedEvent] = useState(null);
 
-    useEffect(() => {
-        console.log('caldir', Cookies.get('ev_calendar_direction'))
-        setCalendarDirection(Cookies.get('ev_calendar_direction') !== undefined ? Cookies.get('ev_calendar_direction') : true);
-        loadEventsAction(startMonth, endMonth, null);
-    }, []);
+    const [selectedSection, setSelectedSection] = useState(useState(Cookies.get('ev_calendar_section') !== undefined ? Cookies.get('ev_calendar_section') : 'NULL'));
+
+    // useEffect(() => {
+    //     console.log('caldir', Cookies.get('ev_calendar_direction'))
+    //     setCalendarDirection(Cookies.get('ev_calendar_direction') !== undefined ? Cookies.get('ev_calendar_direction') : true);
+    //     // loadEventsAction(startMonth, endMonth, null);
+    // }, []);
 
 
-    useEffect(() => {
-        console.log('first', calendarDirection, Cookies.get('ev_calendar_direction'))
-        
-      Cookies.set('ev_calendar_direction', calendarDirection);
-      
-    }, [calendarDirection]);
+
+
 
 
     const loadSectionsAction = async () => {
@@ -72,34 +74,36 @@ const EventorFlowPage = ({user_data, user_state, on_callback}) => {
                 }
             });
             
-            let prevEvents = getSections();
+            let prevSections = getSections();
             
-            console.log('prevEvents', prevEvents);
-            for (let i = 0; i < prevEvents.length; i++) {
-                console.log(prevEvents[i]);
-                if (!prevEvents[i].syncStatus && !prevEvents[i].id.includes('temp_')){
-                    removeEvent(prevEvents[i].id);
+            console.log('prevSections', prevSections);
+            for (let i = 0; i < prevSections.length; i++) {
+                console.log(prevSections[i]);
+                if (!prevSections[i].syncStatus && !prevSections[i].id.includes('temp_')){
+                    removeSection(prevSections[i].id);
                 };
             };
 
             const data = response.data.content;
             for (let i = 0; i < data.length; i++) {
-                addEvent(data[i].id, data[i]);
+                addSection(data[i].id, data[i]);
             }
-            setBaseEvents(data);
+            setBaseSections(data);
             loadedFromServer = true;
         } catch (error) {
             console.error('Sync failed:', error);
         }
 
         if (!loadedFromServer){
-            setBaseEvents(getEvents());
+            setBaseSections(getSections());
         }
         setTimeout(() => {
             setPreHidden(false);
         }, 700);
 
     }
+
+
 
     const loadEventsAction = async (start, end, section) => {
         let loadedFromServer = false;
@@ -109,7 +113,7 @@ const EventorFlowPage = ({user_data, user_state, on_callback}) => {
             {
                 start: start,
                 end: end,
-                section: section
+                sections: [section]
             }, {
                 headers: {
                     'Authorization': 'Bearer ' + Cookies.get('jwt')
@@ -145,6 +149,20 @@ const EventorFlowPage = ({user_data, user_state, on_callback}) => {
     }
 
 
+    useEffect(() => {
+        let a =  baseSections?.map((item)=>(
+            { 
+                key: "sect_" + item.id ,
+                label: item.name,
+                id: item.id
+            }
+        ));
+        if (!a){ a = []};
+        a?.unshift({ key: 'sect_all', label: 'All sections', id: 'ALL'});
+        a?.unshift({ key: 'no_sect', label: 'No section', id: 'NULL'});
+        setSidenavSections(a);
+    }, [baseSections]);
+
     const handleUpdateEvents = (ids)=> {
         console.log('ids', ids)
         console.log('getEvents()', getEvents());
@@ -158,13 +176,15 @@ const EventorFlowPage = ({user_data, user_state, on_callback}) => {
 
 
     useEffect(() => {
+        Cookies.set('ev_calendar_direction', calendarDirection);
         setPreHidden(true);
         // setBaseEvents(getEvents());
-        loadEventsAction(startMonth, endMonth, null);
+        loadSectionsAction();
+        loadEventsAction(startMonth, endMonth, selectedSection);
         setTimeout(() => {
             setPreHidden(false);
         }, 700);
-    }, [startMonth, endMonth, calendarDirection]);
+    }, [startMonth, endMonth, calendarDirection, selectedSection]);
 
 
     const handleChangeTargetMonths = (dates)=>{
@@ -195,6 +215,8 @@ const EventorFlowPage = ({user_data, user_state, on_callback}) => {
     }
 
 
+
+
     useEffect(() => {
         if (startMonth == null){
           
@@ -205,16 +227,17 @@ const EventorFlowPage = ({user_data, user_state, on_callback}) => {
       let newDates = [];
       let max = 1120;
 
-      setTimeout(() => {
-          
-          if (calendarDirection == true){
+
+          console.log('calendarDirection 2', calendarDirection)
+          if (calendarDirection === 'ASC'){
               let currentDate = startMonth.clone();
               let lastMonth = currentDate.month();
                 newDates.push({type: 'dayheader', date: currentDate.clone(currentDate.clone())});
-              while (currentDate.format('YYYY-MM-DD') != endMonth.format('YYYY-MM-DD')){
+              while (currentDate.format('YYYY-MM-DD') !== endMonth.format('YYYY-MM-DD')){
+                    console.log('currentDate', currentDate)
                   newDates.push({type: 'day', date: currentDate.clone(currentDate.clone())});
                   currentDate = currentDate.add(1,'day');
-                  if (currentDate.month() != lastMonth){
+                  if (currentDate.month() !== lastMonth){
                     newDates.push({type: 'dayheader', date: currentDate.clone(currentDate.clone())});
                     lastMonth = currentDate.month();
                   }
@@ -229,10 +252,10 @@ const EventorFlowPage = ({user_data, user_state, on_callback}) => {
                 let currentDate = endMonth.clone();
               let lastMonth = currentDate.month();
                     newDates.push({type: 'dayheader', date: currentDate.clone(currentDate.clone())});
-              while (currentDate.format('YYYY-MM-DD') != startMonth.format('YYYY-MM-DD')){
+              while (currentDate.format('YYYY-MM-DD') !== startMonth.format('YYYY-MM-DD')){
                   newDates.push({type: 'day', date: currentDate.clone(currentDate.clone())});
                   currentDate = currentDate.subtract(1,'day');
-                  if (currentDate.month() != lastMonth){
+                  if (currentDate.month() !== lastMonth){
                     newDates.push({type: 'dayheader', date: currentDate.clone(currentDate.clone())});
                     lastMonth = currentDate.month();
                   }
@@ -246,10 +269,14 @@ const EventorFlowPage = ({user_data, user_state, on_callback}) => {
           }
           // console.log('newDates', newDates)
           setDateArray(newDates);
-      }, 300);
+
 
 
     }, [startMonth, endMonth, calendarDirection]);
+
+
+
+
 
     const handleOpenView = (date, id) => {
         
@@ -257,7 +284,7 @@ const EventorFlowPage = ({user_data, user_state, on_callback}) => {
 
     const handleOpenEditor = (date, section, id) => {
         setOpenModalEditor(true);
-        setEditedEvent({id: null, date: date, section: section});
+        setEditedEvent({id: null, date: date, section_id: section});
     }
 
     const handleCloseEditor = (date, id) => {
@@ -271,6 +298,19 @@ const EventorFlowPage = ({user_data, user_state, on_callback}) => {
     }
 
 
+    const handleChangeSection = (value) => {
+        console.log('value', value)
+        setSelectedSection(value);
+        Cookies.set('ev_calendar_section', value);
+    }
+
+
+    const handleTriggerSidenav = (val) => {
+        if (layout_change_callback){
+            layout_change_callback(val);
+        }
+        console.log('val', val)
+    }
 
 
   return (
@@ -281,15 +321,18 @@ const EventorFlowPage = ({user_data, user_state, on_callback}) => {
             <DevSideNavMt 
                 title="Sections" 
                 selected=""
-                items=""
+                items={sidenavSections}
                 on_callback={on_callback}
+                on_change_item={handleChangeSection}
+                active_item={selectedSection}
+                layout_change_callback={handleTriggerSidenav}
             />
         
         <div className={'mi-layout-body'}><div className={'mi-page-wrapper'}>
             <div className={"mi-ska-mw-1900"}>
                     
                     <div className={'mi-pa-12'}>
-                        <div className={"mi-flex-space"}>
+                        <div className={"mi-flex-space mi-control-flat-row"}>
                             <div>{calendarDirection ? '' : ''}</div>
                             <div className={'mi-flex  mi-grid-gap-6'}>
                                 <Button
@@ -305,6 +348,7 @@ const EventorFlowPage = ({user_data, user_state, on_callback}) => {
                                 />
 
                                 <DatePicker.RangePicker 
+                                    className={'narrow-range-picker'}
                                     picker='month'
                                     size='small'
                                     value={[startMonth, endMonth]}
@@ -324,15 +368,15 @@ const EventorFlowPage = ({user_data, user_state, on_callback}) => {
                             </div>
                             <div>
 
-                            {calendarDirection ? (
+                            {calendarDirection === 'DESC' ? (
                                 <div 
-                                onClick={()=>{setCalendarDirection(false)}}
+                                onClick={()=>{setCalendarDirection('ASC')}}
                                 className={'evt-calendar-direction-switch'}
                                     title='From past to future'
                                 ><DownSquareOutlined /></div>
                             ):(
                                <div
-                                onClick={()=>{setCalendarDirection(true)}}
+                                onClick={()=>{setCalendarDirection('DESC')}}
                                 className={'evt-calendar-direction-switch'}
                                     title='From future to past'
                                     ><UpSquareOutlined /></div>
@@ -357,11 +401,13 @@ const EventorFlowPage = ({user_data, user_state, on_callback}) => {
                                             on_open_view={handleOpenView}
                                             events={localEvents.filter((item)=> dayjs(item.setdate).isSame(dateg.date, 'd') )}
                                             on_change_trigger={handleClickToChangeEvent}
+                                            active_section={selectedSection}
                                         />
                                     )}
                                     {dateg.type === 'dayheader' && (
                                         <FlowDayHeadRow date={dateg.date} 
                                             key={`daymonthrow_${dateg.date.format('YYYY-MM-DD')}`}
+                                            container={sidenavSections.find((item)=>item.id === selectedSection)?.label}
                                         />
                                     )}
                                 </>
@@ -439,12 +485,13 @@ const EventorFlowPage = ({user_data, user_state, on_callback}) => {
 
  
         <EventEditorCom
-
+            className={'narrow-range-picker'}
             open={openModalEditor}
             onOk={() => setOpenModalEditor(false)}
             onCancel={() => setOpenModalEditor(false)}
             data={editedEvent}
             on_change={handleUpdateEvents}
+            sections={baseSections}
         />
 
 

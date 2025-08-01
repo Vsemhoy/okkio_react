@@ -112,7 +112,10 @@ function App() {
             <Route path={'/dev/projects'} element={<ProjectPageMt userdata={userProfile}/>} />
             {/* <Route path={BASE_ROUTE + '/dev/projects'} element={<ProjectPageMt userdata={userProfile}/>}/> */}
 
-            <Route path={'/eventor'} element={<EventorFlowPage userdata={userProfile} on_callback={layoutCallback}/>} />
+            <Route path={'/eventor'} element={<EventorFlowPage userdata={userProfile}
+              on_callback={layoutCallback}
+              layout_change_callback={setLayoutCallback}
+            />} />
             {/* <Route path={BASE_ROUTE + '/eventor'} element={<EventorFlowPage userdata={userProfile}/>}/> */}
 
             {/* <Route path={'/'} element={<MainPageUt userdata={userProfile}/>} />

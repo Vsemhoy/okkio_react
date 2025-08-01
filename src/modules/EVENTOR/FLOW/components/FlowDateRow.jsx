@@ -42,7 +42,12 @@ const FlowDateRow = (props) => {
             // let newobj = { date: date };
             // setEventStack([newobj, ...eventStack]);
             if (props.on_open_editor){
-                props.on_open_editor(date, null, null);
+                props.on_open_editor(date.hour(dayjs().hour())
+                    .minute(dayjs().minute())
+                    .second(dayjs().second())
+                    .millisecond(dayjs().millisecond()), 
+                    props.active_section
+                    , null);
             }
         }
     }

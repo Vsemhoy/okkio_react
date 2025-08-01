@@ -109,6 +109,8 @@ const EventEditorCom = (props) => {
         getEvtypes,
     } = useEventorStorage();
 
+    const [sections, setSections] = useState();
+
     const [itemId, setItemId] = useState(null);
     const [openModal, setOpenModal] = useState(false);
     const [blockAction, setBlockAction] = useState(false);
@@ -136,17 +138,22 @@ const EventEditorCom = (props) => {
     const [langList, setLangList] = useState(['JavaScript']);
 
     useEffect(() => {
-        let a =  getSections().map((item)=>(
+        let a =  props.sections?.map((item)=>(
             { 
                 key: "sect_" + item.id ,
                 label: item.name,
                 value: item.id
             }
         ));
-        a.unshift({ key: 'sect_null', label: 'No section', value: 0});
+        // a?.unshift({ key: 'sect_all', label: 'All sections', id: 'ALL'});
+        a?.unshift({ key: 'no_sect', label: 'No section', id: 'NULL'});
         console.log('a', a)
-        setSectionList(a);
+        if (a){
+          setSectionList(a);
+        };
     }, [props.open]);
+
+
     const handleChangeSection = (val) => {
         if (val == 0){
             setFormSection(null);
@@ -204,7 +211,7 @@ const EventEditorCom = (props) => {
                 const langs = extractCodeLanguages(data.content);
                 setLangList(langs);
                 setFormType(data.type_id ? data.type_id : formType);
-                setFormSection(data.section ?? 0);
+                setFormSection(data.section_id ?? 0);
 
             }
             catch (error) {
@@ -225,7 +232,7 @@ const EventEditorCom = (props) => {
                 const langs = extractCodeLanguages(evt.content);
                 setLangList(langs);
                 setFormType(evt.type_id ? evt.type_id : formType);
-                setFormSection(evt.section ?? 0);
+                setFormSection(evt.section_id ?? 0);
             } else {
                 setFormContent('');
                 setFormName('New');
@@ -237,9 +244,9 @@ const EventEditorCom = (props) => {
         } else {
           // CREATE NEW
             setItemId(null);
-
+            console.log('props', props)
             setFormSetDate(props.data?.date);
-            setFormSection(props.data?.section ?? 0);
+            setFormSection(props.data?.section_id ?? 0);
             setFormName("");
             setFormContent("");
             setLangList(['JavaScript']);
@@ -329,7 +336,7 @@ const EventEditorCom = (props) => {
       setdate: formSetDate.format('YYYY-MM-DD HH:mm:ss'),
       createdAt: itemId ? null : now,
       updatedAt: now,
-      section: formSection || null,
+      section_id: formSection || null,
       type_id: formType != null && formType != 0 ? formType : null,
       access: 1,
       status: 1,
@@ -696,7 +703,7 @@ const extractCodeLanguages = (markdown) => {
 
         footer={<div className={'mi-pa-3 mi-flex-space'}>
             <div className='mi-flex mi-grid-gap-12'>
-                <Dropdown
+                {/* <Dropdown
                 menu={{ items }}
                 placement="topLeft"
                 >
@@ -712,7 +719,7 @@ const extractCodeLanguages = (markdown) => {
                 danger
                 icon={<DeleteOutlined />}
                 type={'default'}
-                ></Button></Tooltip>
+                ></Button></Tooltip> */}
             </div>
             <div></div>
             <div className='mi-flex mi-grid-gap-12'>

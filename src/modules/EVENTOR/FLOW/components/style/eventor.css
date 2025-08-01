@@ -1,1 +1,7 @@
-
+.eventor-flow-daycard p,
+.eventor-flow-daycard li,
+.eventor-flow-daycard code,
+.eventor-flow-daycard a 
+{
+    word-break: break-word;
+}

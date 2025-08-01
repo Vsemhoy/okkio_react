@@ -31,9 +31,6 @@ const MenuBox = (props) => {
     storage
   } = useLayoutStorage();
 
-  useEffect(() => {
-    console.log('ALLO', 78654)
-  }, [getOpenSidebar()]);
 
   // Проверяем авторизацию при загрузке
   React.useEffect(() => {
@@ -132,6 +129,7 @@ const developerItems = [
           <div className={''}>
             {getOpenSidebar() ? (
                   <Button 
+                    style={{width: '43px'}}
                     type="text" 
                     size={buttSize}
                     onClick={() => setOpenSidebar(false)}
@@ -140,6 +138,7 @@ const developerItems = [
                   </Button>
                 ) : (
                   <Button 
+                  style={{width: '43px'}}
                     type="text" 
                     size={buttSize}
                     onClick={() => setOpenSidebar(true)}

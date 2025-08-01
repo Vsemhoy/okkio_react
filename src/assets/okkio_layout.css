@@ -403,3 +403,7 @@
 .ant-card-body {
     padding: 16px !important;
 }
+
+.narrow-range-picker input {
+    width: 68px !important;
+}

@@ -67,7 +67,8 @@
     background-color: rgba(255, 255, 255, 0.158);
 }
 .mi-ds-menu-block{
-    min-height: calc(100vh - 44px);
+        height: calc(100vh - 44px);
+    overflow: auto;
     color: white;
 }
 .mi-ds-menu-block > div:first-child {
@@ -79,12 +80,12 @@
 }
 
 .mi-ds-menu-proj-stack-item {
-    padding: 9px;
+    /* padding: 9px; */
     cursor: pointer;
 }
 
 .mi-tree-header-name.active {
-color: rgba(0, 0, 0, 0.88);
+    color: rgba(0, 0, 0, 0.88);
     background-color: #e6f4ff;
 }
 
@@ -97,8 +98,71 @@ color: rgba(0, 0, 0, 0.88);
     font-size: larger;
 }
 .mi-ds-menu-proj-card-item.active {
-    background: #0d111744;
+    background: #0075ce7a; 
+     /* #0d111744; */
 }
 .mi-ds-menu-proj-card-item:hover {
     background: #0d11172d;
 }
+.mi-ds-menu-proj-card-item.active:hover {
+    background: #005ba07a; 
+     /* #0d111744; */
+}
+.mi-devside-menu {
+}
+.mi-devsidebar {
+    z-index: 999999 !important;
+    
+}
+.mi-devsider-topper button {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    color: white;
+    font-size: large;
+    padding: 16px 12px;
+    height: 40px;
+}
+
+.mi-devsider-topper {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.253);
+    border-left: 1px solid rgba(255, 255, 255, 0.253);
+    display: block;
+    height: 40px;
+    width: 44px;
+    background-color: rgba(0, 0, 0, 0.547);
+    backdrop-filter: blur(22px);
+    position: fixed;
+    top: 0px;
+    z-index: 1;
+}
+
+@media screen and (max-width: 668px) {
+    .mi-devsider-topper {
+        background-color: rgba(0, 0, 0, 0.56) !important;
+        position: fixed;
+        z-index: 9999 !important;
+    }
+    .mds-closed-topper {
+        display: none;
+    }
+
+    .mi-devsider-rail-topper {
+        background-color: rgba(0, 0, 0, 0);
+        width: 9px;
+        height: 100vh;
+        z-index: 9999 !important;
+        position: fixed;
+        left: 0px;
+        cursor: pointer;
+        display: none;
+        transition: all 0.3s;
+    }
+    .mds-closed-rail-topper {
+        display: block;
+    }
+    .mi-devsider-rail-topper:hover {
+        background-color: rgba(0, 0, 0, 0.478);
+    }
+}
+

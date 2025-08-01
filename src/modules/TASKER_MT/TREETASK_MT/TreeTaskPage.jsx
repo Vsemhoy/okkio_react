@@ -149,7 +149,7 @@ const menuProps = {
 
 
 
-const TreeTaskPage = ({user_data, user_state}) => {
+const TreeTaskPage = ({user_data, user_state, on_callback}) => {
   const dispatch = useDispatch();
   const activeProject = useSelector(state => state.ui.currentProject);
   const treeData = useSelector(state => state.tasks.projects[activeProject.id]?.tree || []);
