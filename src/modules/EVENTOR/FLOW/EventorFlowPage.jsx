@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import DevSideNavMt from '../../../components/MimiTemplate/components/DEVSIDENAV/DevSidenavMt';
-import { Button, DatePicker, Input, Modal, Switch } from 'antd';
-import { DoubleLeftOutlined, DoubleRightOutlined, DownSquareOutlined, LeftOutlined, LoadingOutlined, RightOutlined, UpSquareOutlined } from '@ant-design/icons';
+import { Button, DatePicker, FloatButton, Input, Modal, notification, Switch } from 'antd';
+import { DoubleLeftOutlined, DoubleRightOutlined, DownSquareOutlined, LeftOutlined, LoadingOutlined, QuestionCircleOutlined, RightOutlined, SunOutlined, SyncOutlined, UpSquareOutlined, WarningOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import FlowDateRow from './components/FlowDateRow';
 import FlowDayHeadRow from './components/FlowDayHeadRow';
@@ -11,6 +11,10 @@ import { PROD_AXIOS_INSTANCE } from '../../../API/API';
 import './components/style/eventor.css';
 
 import Cookies from "js-cookie";
+
+const Context = React.createContext({ name: 'Default' });
+
+
 
 const EventorFlowPage = ({user_data, user_state, on_callback, layout_change_callback}) => {
 
@@ -34,7 +38,7 @@ const EventorFlowPage = ({user_data, user_state, on_callback, layout_change_call
     const [openModalEditorData, setOpenModalEditorData] = useState(null);
     const [openModalView, setOpenModalView] = useState(false);
     // const [openModalEditor, setOpenModalEditor] = useState(false);
-
+    const [loadWarning, setLoadWarning] = useState(false);
 
     const [dateArray, setDateArray] = useState([]);
     const [calendarDirection, setCalendarDirection] = useState(Cookies.get('ev_calendar_direction') !== undefined ? Cookies.get('ev_calendar_direction') : 'DESC');
@@ -49,15 +53,13 @@ const EventorFlowPage = ({user_data, user_state, on_callback, layout_change_call
     const [localEvents, setLocalEvents] = useState([]);
     const [editedEvent, setEditedEvent] = useState(null);
 
-    const [selectedSection, setSelectedSection] = useState(useState(Cookies.get('ev_calendar_section') !== undefined ? Cookies.get('ev_calendar_section') : 'NULL'));
+    const [selectedSection, setSelectedSection] = useState(Cookies.get('ev_calendar_section') !== undefined ? Cookies.get('ev_calendar_section') : 'NULL');
 
     // useEffect(() => {
     //     console.log('caldir', Cookies.get('ev_calendar_direction'))
     //     setCalendarDirection(Cookies.get('ev_calendar_direction') !== undefined ? Cookies.get('ev_calendar_direction') : true);
     //     // loadEventsAction(startMonth, endMonth, null);
     // }, []);
-
-
 
 
 
@@ -76,7 +78,6 @@ const EventorFlowPage = ({user_data, user_state, on_callback, layout_change_call
             
             let prevSections = getSections();
             
-            console.log('prevSections', prevSections);
             for (let i = 0; i < prevSections.length; i++) {
                 console.log(prevSections[i]);
                 if (!prevSections[i].syncStatus && !prevSections[i].id.includes('temp_')){
@@ -90,12 +91,14 @@ const EventorFlowPage = ({user_data, user_state, on_callback, layout_change_call
             }
             setBaseSections(data);
             loadedFromServer = true;
+            setLoadWarning(false);
         } catch (error) {
             console.error('Sync failed:', error);
         }
 
         if (!loadedFromServer){
             setBaseSections(getSections());
+            setLoadWarning(true);
         }
         setTimeout(() => {
             setPreHidden(false);
@@ -122,9 +125,7 @@ const EventorFlowPage = ({user_data, user_state, on_callback, layout_change_call
             
             let prevEvents = getEvents(start, end, section);
             
-            console.log('prevEvents', prevEvents);
             for (let i = 0; i < prevEvents.length; i++) {
-                console.log(prevEvents[i]);
                 if (!prevEvents[i].syncStatus && !prevEvents[i].id.includes('temp_')){
                     removeEvent(prevEvents[i].id);
                 };
@@ -136,42 +137,45 @@ const EventorFlowPage = ({user_data, user_state, on_callback, layout_change_call
             }
             setBaseEvents(data);
             loadedFromServer = true;
+            setLoadWarning(false);
         } catch (error) {
             console.error('Sync failed:', error);
         }
-
+        
         if (!loadedFromServer){
-            setBaseEvents(getEvents());
+            setBaseEvents(getEvents(start, end, section));
+            setLoadWarning(true);
         }
         setTimeout(() => {
             setPreHidden(false);
         }, 700);
+        
     }
-
+    
 
     useEffect(() => {
         let a =  baseSections?.map((item)=>(
             { 
                 key: "sect_" + item.id ,
                 label: item.name,
-                id: item.id
+                id: item.id,
+                value: item.id,
             }
         ));
         if (!a){ a = []};
-        a?.unshift({ key: 'sect_all', label: 'All sections', id: 'ALL'});
-        a?.unshift({ key: 'no_sect', label: 'No section', id: 'NULL'});
+        a?.unshift({ key: 'sect_all', label: 'All sections', id: 'ALL', value:'ALL'});
+        a?.unshift({ key: 'no_sect', label: 'No section', id: 'NULL', value: 'NULL'});
         setSidenavSections(a);
+        
     }, [baseSections]);
 
     const handleUpdateEvents = (ids)=> {
-        console.log('ids', ids)
-        console.log('getEvents()', getEvents());
         setBaseEvents(getEvents());
     }
 
     useEffect(() => {
-      console.log('baseEvents', baseEvents)
       setLocalEvents(baseEvents.filter((item)=> dayjs(item.setdate).isAfter(startMonth) && dayjs(item.setdate).isBefore(endMonth)));
+      
     }, [baseEvents]);
 
 
@@ -228,13 +232,12 @@ const EventorFlowPage = ({user_data, user_state, on_callback, layout_change_call
       let max = 1120;
 
 
-          console.log('calendarDirection 2', calendarDirection)
           if (calendarDirection === 'ASC'){
               let currentDate = startMonth.clone();
               let lastMonth = currentDate.month();
                 newDates.push({type: 'dayheader', date: currentDate.clone(currentDate.clone())});
               while (currentDate.format('YYYY-MM-DD') !== endMonth.format('YYYY-MM-DD')){
-                    console.log('currentDate', currentDate)
+                    // console.log('currentDate', currentDate)
                   newDates.push({type: 'day', date: currentDate.clone(currentDate.clone())});
                   currentDate = currentDate.add(1,'day');
                   if (currentDate.month() !== lastMonth){
@@ -282,8 +285,11 @@ const EventorFlowPage = ({user_data, user_state, on_callback, layout_change_call
         
     }
 
-    const handleOpenEditor = (date, section, id) => {
+    const  handleOpenEditor = (date, section, id) => {
         setOpenModalEditor(true);
+        if (section.toUpperCase() === 'ALL'){
+            section = 'NULL';
+        };
         setEditedEvent({id: null, date: date, section_id: section});
     }
 
@@ -299,7 +305,7 @@ const EventorFlowPage = ({user_data, user_state, on_callback, layout_change_call
 
 
     const handleChangeSection = (value) => {
-        console.log('value', value)
+
         setSelectedSection(value);
         Cookies.set('ev_calendar_section', value);
     }
@@ -309,11 +315,35 @@ const EventorFlowPage = ({user_data, user_state, on_callback, layout_change_call
         if (layout_change_callback){
             layout_change_callback(val);
         }
-        console.log('val', val)
+    }
+
+
+
+
+
+
+
+    const [api, contextHolder] = notification.useNotification();
+    const openNotification = placement => {
+        api.info({
+        message: `Notification ${placement}`,
+        description: <Context.Consumer>{({ name }) => `Hello, ${name}!`}</Context.Consumer>,
+        placement,
+        });
+    };
+    const contextValue = useMemo(() => ({ name: 'Ant Design' }), []);
+
+
+    const showToday = () => {
+        let today = document.querySelector('#today_row');
+        if (today){
+            today.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+        }
     }
 
 
   return (
+    <Context.Provider  value={contextValue}>
      <div className={`mi-page-layout mi-layout-devsider`}
         
         >
@@ -494,8 +524,22 @@ const EventorFlowPage = ({user_data, user_state, on_callback, layout_change_call
             sections={baseSections}
         />
 
-
+        
+         <FloatButton.Group shape="circle" style={{ insetInlineEnd: 24 }}>
+            {loadWarning && (
+                <FloatButton icon={<WarningOutlined />} />
+            )}
+            <FloatButton onClick={showToday} icon={<SunOutlined/>} />
+            <FloatButton.BackTop visibilityHeight={0} />
+            </FloatButton.Group>
+            {/* <FloatButton.Group shape="square" style={{ insetInlineEnd: 94 }}>
+            <FloatButton icon={<QuestionCircleOutlined />} />
+            <FloatButton />
+            <FloatButton icon={<SyncOutlined />} />
+            <FloatButton.BackTop visibilityHeight={0} />
+        </FloatButton.Group> */}
     </div>
+    </Context.Provider>
   );
 };
 

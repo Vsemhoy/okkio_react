@@ -146,7 +146,11 @@ const EventEditorCom = (props) => {
             }
         ));
         // a?.unshift({ key: 'sect_all', label: 'All sections', id: 'ALL'});
-        a?.unshift({ key: 'no_sect', label: 'No section', id: 'NULL'});
+        if (a == null){
+          a = [];
+        };
+        a?.unshift({ key: 'no_sect', label: 'No section', value: 'NULL'});
+
         console.log('a', a)
         if (a){
           setSectionList(a);

@@ -41,6 +41,7 @@ const FlowDateRow = (props) => {
         if (!ev.target.closest('.eventor-flow-daycard')) {
             // let newobj = { date: date };
             // setEventStack([newobj, ...eventStack]);
+            console.log('props.active_section', props.active_section)
             if (props.on_open_editor){
                 props.on_open_editor(date.hour(dayjs().hour())
                     .minute(dayjs().minute())
@@ -61,7 +62,9 @@ const FlowDateRow = (props) => {
 
     return (
         <div className={`flow-date-row-wrapper hidden-control ${preHidden ?  'pre-hiddens': ''}`}>
-            <div className={`flow-date-row ${isToday ? 'today' : ''} ${date.day() === 0 || date.day() === 6 ? "weekend" : ""}`}>
+            <div className={`flow-date-row ${isToday ? 'today' : ''} ${date.day() === 0 || date.day() === 6 ? "weekend" : ""}`}
+                id={isToday ? 'today_row' : ''}
+            >
                 <div
                     className='scrollable-container'
                     ref={containerRef}
