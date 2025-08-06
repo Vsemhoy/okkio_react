@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { useState, useEffect } from "react";
 
 export const useEventorStorage = () => {
@@ -75,40 +76,30 @@ export const useEventorStorage = () => {
 
     const getEvents = ({ start, end, section } = {}) => {
     // Используем функциональное обновление, чтобы получить актуальное состояние
-        setStorage(prev => {
-            let events = Object.values(prev.events || {});
+        // setStorage(prev => {
+        //     let events = Object.values(prev.events || {});
 
-            if (start) {
-            events = events.filter(e => new Date(e.start) >= new Date(start));
-            }
-
-            if (end) {
-            events = events.filter(e => new Date(e.end) <= new Date(end));
-            }
-
-            if (section) {
-            events = events.filter(e => e.section === section);
-            }
-
-            return prev; // Не изменяем состояние, просто используем актуальные данные
-        });
+        //     return prev; // Не изменяем состояние, просто используем актуальные данные
+        // });
 
         // Но поскольку setStorage не возвращает значение, лучше переписать по-другому:
         const currentStorage = JSON.parse(localStorage.getItem('eventor')) || { events: {} };
         let events = Object.values(currentStorage.events || {});
-
         if (start) {
-            events = events.filter(e => new Date(e.start) >= new Date(start));
+          events = events.filter(e => dayjs(e.start) >= dayjs(start).startOf('day'));
         }
-
+        
         if (end) {
-            events = events.filter(e => new Date(e.end) <= new Date(end));
+          events = events.filter(e => dayjs(e.end) <= dayjs(end).startOf('day'));
         }
-
         if (section) {
-            events = events.filter(e => e.section === section);
+          if (section === "NULL"){
+            section = null;
+          }
+          if (section  !== 'ALL'){
+            events = events.filter(e => e.section_id === section);
+          } 
         }
-
         return events;
     };
 

@@ -38,7 +38,7 @@ const FlowDateRow = (props) => {
     }, []);
 
     const handleDblClick = (ev) => {
-        if (!ev.target.closest('.eventor-flow-daycard')) {
+        if (!ev.target.closest('.eventor-flow-daycard') && !ev.target.closest('.ant-modal-content')) {
             // let newobj = { date: date };
             // setEventStack([newobj, ...eventStack]);
             console.log('props.active_section', props.active_section)

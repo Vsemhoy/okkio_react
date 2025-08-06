@@ -12,6 +12,9 @@ import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { LANGUAGE_MAP } from '../../../../components/Definitions/Global/Lists/ProgLangs';
 import { eventCardTrimContent } from '../../cfg/EventorConfig';
 import { BaseEventTypes } from '../../cfg/EvTypes';
+import { PROD_AXIOS_INSTANCE } from '../../../../API/API';
+
+import Cookies from "js-cookie";
 
 const { Meta } = Card;
 
@@ -25,6 +28,7 @@ const EventorFlowDayCard = (props) => {
       const [name, setName] = useState('');
       const [type, setType] = useState(null);
       const [setdate, setSetdate] = useState(dayjs());
+      const [section, setSection] = useState(null);
 
       const [baseType, setBaseType] = useState(null);
 
@@ -38,9 +42,8 @@ const EventorFlowDayCard = (props) => {
         setType(props.data.type_id ? props.data.type_id : null);
         setTrimContent(eventCardTrimContent(props.data.content));
 
-        
-
     }, [props.data]);
+
 
     useEffect(() => {
       setBaseType(BaseEventTypes.find((item)=> item.id === type));
@@ -81,7 +84,34 @@ const EventorFlowDayCard = (props) => {
   }
 
 
-  const handleOpenView = () => {
+  const handleOpenView = async () => {
+    if (!props.data.id.includes('temp_')){
+      try {
+        const response = await PROD_AXIOS_INSTANCE.post('/eventor/getmyevent/' + props.data.id, 
+          {}, {
+          headers: {
+            'Authorization': 'Bearer ' + Cookies.get('jwt')
+          }
+        });
+
+        // console.log('response', response)
+          const data = response.data.content;
+          setSetdate(dayjs(data.setdate));
+          setName(data.name);
+          setContent(data.content);
+          // const langs = extractCodeLanguages(data.content);
+          setType(data.type_id ? data.type_id : null);
+          setSection(data.section_id ?? 0);
+
+      }
+      catch (error) {
+        console.error('Sync failed:', error);
+
+      } finally {
+        
+      }
+    }
+
     setOpenViewer(true);
   }
 

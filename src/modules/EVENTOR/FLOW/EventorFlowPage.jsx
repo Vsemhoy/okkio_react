@@ -79,7 +79,7 @@ const EventorFlowPage = ({user_data, user_state, on_callback, layout_change_call
             let prevSections = getSections();
             
             for (let i = 0; i < prevSections.length; i++) {
-                console.log(prevSections[i]);
+                // console.log(prevSections[i]);
                 if (!prevSections[i].syncStatus && !prevSections[i].id.includes('temp_')){
                     removeSection(prevSections[i].id);
                 };
@@ -123,7 +123,7 @@ const EventorFlowPage = ({user_data, user_state, on_callback, layout_change_call
                 }
             });
             
-            let prevEvents = getEvents(start, end, section);
+            let prevEvents = getEvents({start: start, end: end, section: section});
             
             for (let i = 0; i < prevEvents.length; i++) {
                 if (!prevEvents[i].syncStatus && !prevEvents[i].id.includes('temp_')){
@@ -143,7 +143,7 @@ const EventorFlowPage = ({user_data, user_state, on_callback, layout_change_call
         }
         
         if (!loadedFromServer){
-            setBaseEvents(getEvents(start, end, section));
+            setBaseEvents(getEvents({start: start, end: end, section: section}));
             setLoadWarning(true);
         }
         setTimeout(() => {
@@ -170,7 +170,9 @@ const EventorFlowPage = ({user_data, user_state, on_callback, layout_change_call
     }, [baseSections]);
 
     const handleUpdateEvents = (ids)=> {
-        setBaseEvents(getEvents());
+        let evegets = getEvents({start: startMonth.format('YYYY-MM-DD'), end: endMonth.format('YYYY-MM-DD'), section: selectedSection});
+        console.log('evegets', evegets)
+        setBaseEvents(evegets);
     }
 
     useEffect(() => {
@@ -191,6 +193,7 @@ const EventorFlowPage = ({user_data, user_state, on_callback, layout_change_call
     }, [startMonth, endMonth, calendarDirection, selectedSection]);
 
 
+
     const handleChangeTargetMonths = (dates)=>{
         if (!dates){
                setstartMonth(dayjs().startOf('month'));
@@ -201,6 +204,8 @@ const EventorFlowPage = ({user_data, user_state, on_callback, layout_change_call
         setstartMonth(dates[0].startOf('month'));
         setEndMonth(dates[1].endOf('month'));
     };
+
+
     const handleMoveMonth = (value)=>{
         if (value > 0){
             setstartMonth(startMonth.add(1, 'month').startOf('month'));
@@ -209,14 +214,16 @@ const EventorFlowPage = ({user_data, user_state, on_callback, layout_change_call
             setstartMonth(startMonth.add(-1, 'month').startOf('month'));
             setEndMonth(endMonth.add(-1, 'month').endOf('month'));
         }
-    }
+    };
+
+
     const handleExpandMonth = (value) => {
         if (value > 0){
             setEndMonth(endMonth.add(1, 'month').endOf('month'));
         } else {
             setstartMonth(startMonth.add(-1, 'month').startOf('month'));
         }
-    }
+    };
 
 
 
@@ -281,9 +288,6 @@ const EventorFlowPage = ({user_data, user_state, on_callback, layout_change_call
 
 
 
-    const handleOpenView = (date, id) => {
-        
-    }
 
     const  handleOpenEditor = (date, section, id) => {
         setOpenModalEditor(true);
@@ -291,7 +295,9 @@ const EventorFlowPage = ({user_data, user_state, on_callback, layout_change_call
             section = 'NULL';
         };
         setEditedEvent({id: null, date: date, section_id: section});
-    }
+    };
+
+
 
     const handleCloseEditor = (date, id) => {
 
@@ -428,7 +434,7 @@ const EventorFlowPage = ({user_data, user_state, on_callback, layout_change_call
                                             open_view={openModalView}
                                             on_open_editor={handleOpenEditor}
                                             on_close_editor={handleCloseEditor}
-                                            on_open_view={handleOpenView}
+                                            // on_open_view={handleOpenView}
                                             events={localEvents.filter((item)=> dayjs(item.setdate).isSame(dateg.date, 'd') )}
                                             on_change_trigger={handleClickToChangeEvent}
                                             active_section={selectedSection}

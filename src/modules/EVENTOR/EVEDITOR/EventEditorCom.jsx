@@ -390,6 +390,7 @@ const EventEditorCom = (props) => {
         setBlockAction(false);
         if (props.on_change) {
           props.on_change([tempId]);
+          
           if (close === true){
             props.onCancel();
           }
@@ -615,7 +616,6 @@ const extractCodeLanguages = (markdown) => {
         if (ppcu){
             const spans = ppcu.querySelectorAll('span');
             let index = 0;
-            console.log('spans.length', spans.length)
             Array.from(spans).forEach(span => {
                 // console.log('span', span)
                 if (span.id !== null && span.id.includes('radix')){
